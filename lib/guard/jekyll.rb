@@ -16,11 +16,7 @@ module Guard
         :config => ['_config.yml']
       }.merge(options)
 
-      config = @options[:config]
-      config = [config] unless config.is_a? Array
-      config = ::Jekyll.configuration {'config'=> config}
-
-      @site = ::Jekyll::Site.new config
+      @site = ::Jekyll::Site.new jekyll_config(@options)
       @source = config['source']
       @destination = config['destination']
       
@@ -28,6 +24,12 @@ module Guard
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
       @extensions = Regexp.new extensions.map { |e| (e << '$').gsub('\.', '\\.') }.join('|'), true
 
+    end
+    
+    def jekyll_config(options)
+      config_files = options[:config]
+      config_files = [config_files] unless config_files.is_a? Array
+      ::Jekyll.configuration { "config" => config_files }
     end
 
     # Calls #run_all if the :all_on_start option is present.
