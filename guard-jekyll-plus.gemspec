@@ -5,7 +5,7 @@ require 'guard/jekyll/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "guard-jekyll-plus"
-  gem.version       = Guard::Jekyll::Plus::VERSION
+  gem.version       = Guard::Jekyll::VERSION
   gem.authors       = ["Brandon Mathis"]
   gem.email         = ["brandon@imathis.com"]
   gem.description   = %q{guard for smarter Jekyll watching}
