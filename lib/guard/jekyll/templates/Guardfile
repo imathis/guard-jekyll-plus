@@ -1,0 +1,5 @@
+guard :jekyll do
+  watch /.*/
+  ignore /^_site/
+end
+
