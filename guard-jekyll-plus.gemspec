@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Brandon Mathis"]
   gem.email         = ["brandon@imathis.com"]
   gem.description   = %q{A Guard plugin for smarter Jekyll watching}
-  gem.summary       = %q{A Guard plugin for smarter Jekyll watching}
+  gem.summary       = %q{A Guard plugin for Jekyll which intelligently handles changes to static and template files, only running a Jekyll build when necessary. }
   gem.homepage      = "http://github.com/imathis/guard-jekyll-plus"
 
   gem.add_dependency 'guard', '>= 1.1.0'
