@@ -65,9 +65,9 @@ For the most part that's all you'll ever need to do. There are some things you c
 This guard has two configurations.
 
 | Config       | Description                                      | Default
-|:-------------|:-------------------------------------------------|:-------------------------------------------------------|
-| `extensions` | Array of file extensions to trigger Jekyll build | ['md','markdown','textile','html','haml','slim','xml'] |
-| `config`     | Array of configuration files                     | ['_config.yml']                                        |
+|:-------------|:-------------------------------------------------|:--------------------------------------------------------------------|
+| `extensions` | Array of file extensions to trigger Jekyll build | ['md', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
+| `config`     | Array of configuration files                     | ['_config.yml']                                                     |
 
 **Note:** customizations to the `extensions` configuration are additive.
 
@@ -82,7 +82,7 @@ guard :jekyll, :extensions => ['txt'] do
 end
 ```
 
-Now Guard will be watching for changes to txt, md, markdown, textile, html, haml, slim, xml files. When these files change Guard will trigger a Jekyll build. Files
+Now Guard will be watching for changes to txt, md, markdown, textile, html, haml, slim, xml, yml files. When these files change Guard will trigger a Jekyll build. Files
 which don't match these extensions will be simply copied over to the destination directory when a change occurs, or deleted if appropriate.
 
 ### Configuring Jekyll config file
