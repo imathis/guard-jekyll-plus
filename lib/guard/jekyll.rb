@@ -9,17 +9,19 @@ module Guard
     def initialize (watchers=[], options={})
       super
 
-      default_extensions = ['md','markdown','textile','html','haml','slim','xml','yml']
+      default_extensions = ['md','mkd','markdown','textile','html','haml','slim','xml','yml']
 
       @options = {
         :extensions => [], 
-        :config => ['_config.yml']
+        :config => ['_config.yml'],
+        :serve => false
       }.merge(options)
 
-      config = jekyll_config(@options)
-      @site = ::Jekyll::Site.new config
-      @source = local_path config['source']
-      @destination = local_path config['destination']
+      @pid = nil
+      @config = jekyll_config(@options)
+      @site = ::Jekyll::Site.new @config
+      @source = local_path @config['source']
+      @destination = local_path @config['destination']
       
       extensions = @options[:extensions].concat(default_extensions).flatten.uniq
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
@@ -27,14 +29,26 @@ module Guard
 
     end
 
-    # Calls #run_all if the :all_on_start option is present.
     def start
-      UI.info 'Guard::Jekyll is watching for file changes'
-      build
+
+      if @options[:serve]
+        start_server
+
+        UI.info "Guard::Jekyll is watching files and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}".bold
+      else
+        build
+        UI.info "Guard::Jekyll is watching".bold
+      end
     end
 
-    def reload
-      build
+    def restart
+      stop if alive?
+      start
+    end
+
+
+    def stop
+      stop_server
     end
 
     def run_all
@@ -67,7 +81,7 @@ module Guard
         throw :task_has_failed
       end
     end
-    
+
     # Copy static files to destination directory
     #
     def copy(file)
@@ -154,6 +168,40 @@ module Guard
         file.sub /^#{@source}/, "#{@destination}"
       end
     end
+
+    def server
+      proc{ Process.spawn "jekyll server --config #{@options[:config].join(',')}" }
+    end
+
+    def kill
+      proc{|pid| Process.kill("QUIT", pid)}
+    end
+
+    def start_server
+      return @pid if alive?
+      @pid = instance_eval &server
+    end
+
+    def stop_server
+      if alive?
+        instance_eval do
+          kill.call(@pid)
+          @pid = nil
+        end
+      end
+    end
+    
+    def alive?
+      return false unless @pid
+
+      begin
+        Process.getpgid(@pid)
+        true
+      rescue Errno::ESRCH => e
+        false
+      end
+    end
+
 
   end
 end

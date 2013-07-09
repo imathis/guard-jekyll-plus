@@ -4,8 +4,10 @@ A Guard plugin for smarter Jekyll watching.
 
 Features:
 
-- Changes to static files apply without triggering an unnecessary build.
-- Only template file changes trigger a Jekyll build.
+- Changing static files won't trigger a jekyll build! Files are copied/removed instead.
+- Batched processing! (Adding a directory of `n` files triggers a single build)
+- Reads options from your YAML config file(s)
+- Supports multiple config files (Jekyll 1.0)
 
 ## Installation
 
@@ -65,9 +67,10 @@ For the most part that's all you'll ever need to do. There are some things you c
 This guard has two configurations.
 
 | Config       | Description                                      | Default
-|:-------------|:-------------------------------------------------|:--------------------------------------------------------------------|
-| `extensions` | Array of file extensions to trigger Jekyll build | ['md', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
-| `config`     | Array of configuration files                     | ['_config.yml']                                                     |
+|:-------------|:-------------------------------------------------|:---------------------------------------------------------------------------|
+| `extensions` | Array of file extensions to trigger Jekyll build | ['md', 'mkd', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
+| `config`     | Array of configuration files                     | ['_config.yml']                                                            |
+| `serve`      | Use Jekyll's build in WEBrick server             | false                                                                      |
 
 **Note:** customizations to the `extensions` configuration are additive.
 
@@ -82,7 +85,7 @@ guard :jekyll, :extensions => ['txt'] do
 end
 ```
 
-Now Guard will be watching for changes to txt, md, markdown, textile, html, haml, slim, xml, yml files. When these files change Guard will trigger a Jekyll build. Files
+Now Guard will be watching for changes to txt, md, mkd, markdown, textile, html, haml, slim, xml, yml files. When these files change Guard will trigger a Jekyll build. Files
 which don't match these extensions will be simply copied over to the destination directory when a change occurs, or deleted if appropriate.
 
 ### Configuring Jekyll config file
