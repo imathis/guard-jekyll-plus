@@ -5,11 +5,11 @@ require 'guard/jekyll/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "guard-jekyll-plus"
-  gem.version       = Guard::Jekyll::VERSION
+  gem.version       = Guard::JekyllVersion::VERSION
   gem.authors       = ["Brandon Mathis"]
   gem.email         = ["brandon@imathis.com"]
-  gem.description   = %q{guard for smarter Jekyll watching}
-  gem.summary       = %q{guard for smarter Jekyll watching}
+  gem.description   = %q{A Guard plugin for smarter Jekyll watching}
+  gem.summary       = %q{A Guard plugin for smarter Jekyll watching}
   gem.homepage      = "http://github.com/imathis/guard-jekyll-plus"
 
   gem.add_dependency 'guard', '>= 1.1.0'
