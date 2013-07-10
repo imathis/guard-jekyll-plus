@@ -12,7 +12,7 @@ Features:
 
 Here's a look
 
-![Colorized output](http://cl.ly/QAK9/content.png)
+![Colorized output](http://cl.ly/Q9qK/content.png)
 
 ## Installation
 
