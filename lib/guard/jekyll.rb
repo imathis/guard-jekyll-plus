@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'guard'
 require 'guard/guard'
 
@@ -34,10 +36,10 @@ module Guard
       if @options[:serve]
         start_server
 
-        UI.info "Guard::Jekyll is watching files and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}".bold
+        UI.info "Guard::Jekyll " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}"
       else
         build
-        UI.info "Guard::Jekyll is watching".bold
+        UI.info "Guard::Jekyll " + "watching"
       end
     end
 
@@ -64,61 +66,84 @@ module Guard
     end
 
     def run_on_removals(paths)
-      paths.each { |file| remove file }
+      remove paths
     end
 
 
     private
 
-    def build
+    def build(changes=nil)
       begin
-        UI.info "Guard::Jekyll "+" building".yellow + " source: #{@source}, destination: #{@destination}"
+        UI.info "Guard::Jekyll " + "building...".yellow
+        if changes
+          puts '| ' # spacing
+          changes.each { |file| puts '|' + "  ~ ".yellow + file }
+          puts '| ' # spacing
+        end
         @site.process
-        UI.info "Guard::Jekyll "+" complete".green + " #{@source} built to #{@destination}"
+        UI.info "Guard::Jekyll " + "build complete ".green + "#{@source} → #{@destination}"
 
       rescue Exception => e
         UI.error "Guard::Jekyll build has failed"
+        stop_server
         throw :task_has_failed
       end
     end
 
     # Copy static files to destination directory
     #
-    def copy(file)
+    def copy(files=[])
       begin
-        path = destination_path file
-        FileUtils.mkdir_p File.dirname(path)
-        FileUtils.cp file, path
-        UI.info "Guard::Jekyll" + "    copied ".green + "#{file} -> #{path}"
+        message = 'copied file'
+        message += 's' if files.size > 1
+        UI.info "Guard::Jekyll #{message.green}"
+        puts '| ' #spacing
+        files.each do |file|
+          path = destination_path file
+          FileUtils.mkdir_p File.dirname(path)
+          FileUtils.cp file, path
+          puts '|' + "  → ".green + path
+        end
+        puts '| ' #spacing
+
       rescue Exception => e
         UI.error "Guard::Jekyll copy has failed"
         UI.error e
+        stop_server
         throw :task_has_failed
       end
+      true
     end
 
     # Remove deleted source file/directories from destination
     #
-    def remove(file)
-      path = destination_path file
-      if File.exist? path
-        begin
+    def remove(files=[])
+      begin
+        message = 'removed file'
+        message += 's' if files.size > 1
+        UI.info "Guard::Jekyll #{message.red}"
+        puts '| ' #spacing
 
-          FileUtils.rm path
-          UI.info "Guard::Jekyll" + "   removed ".red + path
+        files.each do |file|
+          path = destination_path file
+          if File.exist? path
+            FileUtils.rm path
+            puts '|' + "  x ".red + path
+          end
 
           dir = File.dirname path
           if Dir[dir+'/*'].empty?
             FileUtils.rm_r(dir) 
-            UI.info "Guard::Jekyll" + "   removed ".red + dir
+            puts '|' + "  x ".red + dir
           end
-
-        rescue Exception => e
-          UI.error "Guard::Jekyll remove has failed"
-          UI.error e
-          throw :task_has_failed
         end
+        puts '| ' #spacing
 
+      rescue Exception => e
+        UI.error "Guard::Jekyll remove has failed"
+        UI.error e
+        stop_server
+        throw :task_has_failed
       end
       true
     end
@@ -138,9 +163,9 @@ module Guard
       # If changes match Jekyll extensions, trigger a build else, copy files manually
       # 
       if matches.length > 0
-        build
+        build(matches)
       else
-        copy_files.each   { |f| copy f }
+        copy(copy_files)
       end
     end
 

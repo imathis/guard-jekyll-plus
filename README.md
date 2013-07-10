@@ -8,6 +8,11 @@ Features:
 - Batched processing! (Adding a directory of `n` files triggers a single build)
 - Reads options from your YAML config file(s)
 - Supports multiple config files (Jekyll 1.0)
+- Clear and colorized output
+
+Here's a look
+
+![Colorized output](http://cl.ly/QAK9/content.png)
 
 ## Installation
 
