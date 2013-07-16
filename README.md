@@ -71,11 +71,15 @@ For the most part that's all you'll ever need to do. There are some things you c
 
 This guard has two configurations.
 
-| Config       | Description                                      | Default
-|:-------------|:-------------------------------------------------|:---------------------------------------------------------------------------|
-| `extensions` | Array of file extensions to trigger Jekyll build | ['md', 'mkd', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
-| `config`     | Array of configuration files                     | ['_config.yml']                                                            |
-| `serve`      | Use Jekyll's build in WEBrick server             | false                                                                      |
+| Config        | Description                                      | Default
+|:--------------|:-------------------------------------------------|:-----------------------------------------------------------------------------------|
+| `extensions`  | Array of file extensions to trigger Jekyll build | ['md', 'mkd', 'mkdn', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
+| `config`      | Array of configuration files                     | ['_config.yml']                                                                    |
+| `serve`       | Use Jekyll's build in WEBrick server             | false                                                                              |
+| `drafts`      | Build your site with draft posts                 | false                                                                              |
+| `future`      | Build your site with future dated posts          | false                                                                              |
+| `config_hash` | Use a config hash instead of an array of files   | nil                                                                                |
+| `silent`      | Slience all output other than exception message  | false                                                                              |
 
 **Note:** customizations to the `extensions` configuration are additive.
 

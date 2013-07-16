@@ -11,23 +11,53 @@ module Guard
     def initialize (watchers=[], options={})
       super
 
-      default_extensions = ['md','mkd','markdown','textile','html','haml','slim','xml','yml']
+      default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
 
       @options = {
         :extensions => [], 
         :config => ['_config.yml'],
-        :serve => false
+        :serve => false,
+        :drafts => false,
+        :future => false,
+        :config_hash => nil,
+        :silent => false
       }.merge(options)
 
-      @pid = nil
-      @config = jekyll_config(@options)
-      @site = ::Jekyll::Site.new @config
+      # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
+      #
+      @config = @options[:config_hash] || jekyll_config(@options)
+
+      # Override configuration with passed values
+      #
+      @config['show_drafts'] ||= @options[:drafts]
+      @config['future']      ||= @options[:future]
+
+      # Ensure required configurations are set
+      # This ensures that config_hash option will succeed if set
+      #
+      @config['source']      ||= Dir.pwd
+      @config['desitnation'] ||= File.join(Dir.pwd, '_site')
+      @config['permalink']   ||= 'date'
+      @config['limit_posts'] ||= 0
+      
+      # Store vars for easy internal access
+      #
       @source = local_path @config['source']
       @destination = local_path @config['destination']
-      
-      extensions = @options[:extensions].concat(default_extensions).flatten.uniq
+      @label = "Guard::Jekyll"
+ 
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
+      #
+      extensions  = @options[:extensions].concat(default_extensions).flatten.uniq
       @extensions = Regexp.new extensions.map { |e| (e << '$').gsub('\.', '\\.') }.join('|'), true
+
+      # set Jekyll server process id to nil
+      #
+      @pid = nil
+
+      # Create a Jekyll site
+      #
+      @site = ::Jekyll::Site.new @config
 
     end
 
@@ -36,10 +66,10 @@ module Guard
       if @options[:serve]
         start_server
 
-        UI.info "Guard::Jekyll " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}"
+        UI.info "#{@label} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
       else
         build
-        UI.info "Guard::Jekyll " + "watching"
+        UI.info "#{@label} " + "watching" unless @config[:silent]
       end
     end
 
@@ -74,17 +104,17 @@ module Guard
 
     def build(changes=nil)
       begin
-        UI.info "Guard::Jekyll " + "building...".yellow
+        UI.info "#{@label} " + "building...".yellow unless @config[:silent]
         if changes
           puts '| ' # spacing
           changes.each { |file| puts '|' + "  ~ ".yellow + file }
           puts '| ' # spacing
         end
         @site.process
-        UI.info "Guard::Jekyll " + "build complete ".green + "#{@source} → #{@destination}"
+        UI.info "#{@label} " + "build complete ".green + "#{@source} → #{@destination}" unless @config[:silent]
 
       rescue Exception => e
-        UI.error "Guard::Jekyll build has failed"
+        UI.error "#{@label} build has failed" unless @config[:silent]
         stop_server
         throw :task_has_failed
       end
@@ -96,7 +126,7 @@ module Guard
       begin
         message = 'copied file'
         message += 's' if files.size > 1
-        UI.info "Guard::Jekyll #{message.green}"
+        UI.info "#{@label} #{message.green}" unless @config[:silent]
         puts '| ' #spacing
         files.each do |file|
           path = destination_path file
@@ -107,7 +137,7 @@ module Guard
         puts '| ' #spacing
 
       rescue Exception => e
-        UI.error "Guard::Jekyll copy has failed"
+        UI.error "#{@label} copy has failed" unless @config[:silent]
         UI.error e
         stop_server
         throw :task_has_failed
@@ -121,7 +151,7 @@ module Guard
       begin
         message = 'removed file'
         message += 's' if files.size > 1
-        UI.info "Guard::Jekyll #{message.red}"
+        UI.info "#{@label} #{message.red}" unless @config[:silent]
         puts '| ' #spacing
 
         files.each do |file|
@@ -140,7 +170,7 @@ module Guard
         puts '| ' #spacing
 
       rescue Exception => e
-        UI.error "Guard::Jekyll remove has failed"
+        UI.error "#{@label} remove has failed" unless @config[:silent]
         UI.error e
         stop_server
         throw :task_has_failed
@@ -226,8 +256,6 @@ module Guard
         false
       end
     end
-
-
   end
 end
 
