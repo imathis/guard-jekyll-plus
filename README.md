@@ -33,7 +33,7 @@ Or install it manually with:
 
 Navigate to your Jekyll project directory and create a Guardfile using:
 
-    $ guard init jekyll
+    $ guard init jekyll-plus
 
 Or if you already have a Guardfile, add a Jekyll guard.
 
