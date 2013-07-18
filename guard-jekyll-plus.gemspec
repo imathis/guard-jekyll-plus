@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'guard/jekyll/version'
+require 'guard/jekyll-plus/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "guard-jekyll-plus"
-  gem.version       = Guard::JekyllVersion::VERSION
+  gem.version       = Guard::JekyllPlusVersion::VERSION
   gem.authors       = ["Brandon Mathis"]
   gem.email         = ["brandon@imathis.com"]
   gem.description   = %q{A Guard plugin for smarter Jekyll watching}

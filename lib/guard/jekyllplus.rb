@@ -6,7 +6,7 @@ require 'guard/guard'
 require 'jekyll'
 
 module Guard
-  class Jekyll < Guard
+  class Jekyllplus < Guard
 
     def initialize (watchers=[], options={})
       super
@@ -25,21 +25,13 @@ module Guard
 
       # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
       #
-      @config = @options[:config_hash] || jekyll_config(@options)
+      @config = jekyll_config(@options)
 
-      # Override configuration with passed values
+      # Override configuration with guard option values
       #
       @config['show_drafts'] ||= @options[:drafts]
       @config['future']      ||= @options[:future]
 
-      # Ensure required configurations are set
-      # This ensures that config_hash option will succeed if set
-      #
-      @config['source']      ||= Dir.pwd
-      @config['desitnation'] ||= File.join(Dir.pwd, '_site')
-      @config['permalink']   ||= 'date'
-      @config['limit_posts'] ||= 0
-      
       # Store vars for easy internal access
       #
       @source = local_path @config['source']
@@ -65,7 +57,7 @@ module Guard
 
       if @options[:serve]
         start_server
-
+        build
         UI.info "#{@label} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
       else
         build
@@ -200,9 +192,15 @@ module Guard
     end
 
     def jekyll_config(options)
-      config_files = options[:config]
-      config_files = [config_files] unless config_files.is_a? Array
-      ::Jekyll.configuration({ "config" => config_files })
+      puts options
+      if options[:config_hash]
+        config = options[:config_hash]
+      elsif options[:config]
+        config_files = options[:config]
+        config_files = [config_files] unless config_files.is_a? Array
+        config = { "config" => config_files}
+      end
+      ::Jekyll.configuration(config)
     end
 
     def local_path(path)
@@ -224,8 +222,8 @@ module Guard
       end
     end
 
-    def server
-      proc{ Process.spawn "jekyll server --config #{@options[:config].join(',')}" }
+    def server(config)
+      proc{ Process.fork { ::Jekyll::Commands::Serve.process(config) } }
     end
 
     def kill
@@ -234,7 +232,7 @@ module Guard
 
     def start_server
       return @pid if alive?
-      @pid = instance_eval &server
+      @pid = instance_eval &server(@config)
     end
 
     def stop_server

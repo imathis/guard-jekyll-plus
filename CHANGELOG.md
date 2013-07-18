@@ -9,3 +9,19 @@
 ### 1.1.1
 - Improved colorized output.
 - Rescued errors kill the Jekyll WEBrick server.
+
+## 1.1.2
+
+New config options
+
+- `config_hash` allows passing a config hash instead of an array of config files.
+- `silent` allows you to prevent all output other than exception errors.
+
+### 1.2.0
+
+**Changed** Now you must use jekyllplus in your guard file. Check the readme for updates.
+
+- Changed guard name to jekyllplus to avoid issues with Guard Jekyll.
+- Fixed installation of template guardfile
+- Improved handling of Jekyll WEBrick server
+

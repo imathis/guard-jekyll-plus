@@ -1,4 +1,4 @@
-guard :jekyll do
+guard :jekyllplus do
   watch /.*/
   ignore /^_site/
 end

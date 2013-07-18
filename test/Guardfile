@@ -1,10 +1,8 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 #
-require 'guard/guard'
-require 'jekyll'
 
-guard :jekyll, :config => ['_config.yml', '_override.yml'], :serve => true do
+guard :jekyllplus, :config => ['_config.yml', '_override.yml'], :serve => true do
   watch /.*/
   ignore /^_site/
 end
