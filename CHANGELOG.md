@@ -25,3 +25,7 @@ New config options
 - Fixed installation of template guardfile
 - Improved handling of Jekyll WEBrick server
 
+### 1.2.1
+
+- Removed accidental debugging output.
+

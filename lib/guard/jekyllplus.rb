@@ -192,7 +192,6 @@ module Guard
     end
 
     def jekyll_config(options)
-      puts options
       if options[:config_hash]
         config = options[:config_hash]
       elsif options[:config]
