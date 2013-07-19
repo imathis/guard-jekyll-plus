@@ -54,7 +54,6 @@ module Guard
     end
 
     def start
-
       if @options[:serve]
         start_server
         build
@@ -75,31 +74,48 @@ module Guard
       stop_server
     end
 
-    def run_all
-      build
-    end
-
     def run_on_modifications(paths)
-      changes(paths)
+      matched = jekyll_matches paths
+      unmatched = non_jekyll_matches paths
+
+      if matched.size > 0
+        build(matched, "Files changed: ", "  ~ ".yellow)
+      elsif unmatched.size > 0
+        copy(unmatched)
+      end
     end
 
     def run_on_additions(paths)
-      changes(paths)
+      matched = jekyll_matches paths
+      unmatched = non_jekyll_matches paths
+
+      if matched.size > 0
+        build(matched, "Files added: ", "  + ".green)
+      elsif unmatched.size > 0
+        copy(unmatched)
+      end
     end
 
     def run_on_removals(paths)
-      remove paths
+      matched = jekyll_matches paths
+      unmatched = non_jekyll_matches paths
+
+      if matched.size > 0
+        build(matched, "Files removed: ", "  x ".red)
+      elsif unmatched.size > 0
+        remove(unmatched)
+      end
     end
 
 
     private
 
-    def build(changes=nil)
+    def build(files = nil, message = '', mark = nil)
       begin
-        UI.info "#{@label} " + "building...".yellow unless @config[:silent]
-        if changes
+        UI.info "#{@label} #{message}" + "building...".yellow unless @config[:silent]
+        if files
           puts '| ' # spacing
-          changes.each { |file| puts '|' + "  ~ ".yellow + file }
+          files.each { |file| puts '|' + mark + file }
           puts '| ' # spacing
         end
         @site.process
@@ -170,25 +186,12 @@ module Guard
       true
     end
 
-    def changes(paths)
-      matches = []
-      copy_files = []
+    def jekyll_matches(paths)
+      paths.select { |file| file =~ @extensions }
+    end
 
-      paths.each do |file|
-        if file =~ @extensions
-          matches.push file 
-        else
-          copy_files.push file
-        end
-      end
-
-      # If changes match Jekyll extensions, trigger a build else, copy files manually
-      # 
-      if matches.length > 0
-        build(matches)
-      else
-        copy(copy_files)
-      end
+    def non_jekyll_matches(paths)
+      paths.select { |file| !file.match(/^_/) and !file.match(@extensions) }
     end
 
     def jekyll_config(options)
@@ -219,6 +222,11 @@ module Guard
       else
         file.sub /^#{@source}/, "#{@destination}"
       end
+    end
+
+    # Remove 
+    def ignore_underscores(paths)
+      paths.select { |file| file =~ /^[^_]/  }
     end
 
     def server(config)

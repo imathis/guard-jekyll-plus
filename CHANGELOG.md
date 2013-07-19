@@ -29,3 +29,8 @@ New config options
 
 - Removed accidental debugging output.
 
+### 1.2.2
+
+- Copy and remove ignore changes in directories beginning with an underscore.
+- Improved output for Jekyll build.
+
