@@ -1,7 +1,7 @@
 PATH
   remote: ../
   specs:
-    guard-jekyll-plus (1.2.2)
+    guard-jekyll-plus (1.2.3)
       guard (>= 1.1.0)
       jekyll (>= 1.0.0)
 

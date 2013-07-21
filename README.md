@@ -80,6 +80,7 @@ This guard has two configurations.
 | `future`      | Build your site with future dated posts          | false                                                                              |
 | `config_hash` | Use a config hash instead of an array of files   | nil                                                                                |
 | `silent`      | Slience all output other than exception message  | false                                                                              |
+| `msg_prefix`  | Output messages are prefixed with with this      | 'Jekyll'                                                                           |
 
 **Note:** customizations to the `extensions` configuration are additive.
 

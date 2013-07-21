@@ -20,7 +20,8 @@ module Guard
         :drafts => false,
         :future => false,
         :config_hash => nil,
-        :silent => false
+        :silent => false,
+        :msg_prefix => 'Jekyll'
       }.merge(options)
 
       # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
@@ -36,7 +37,7 @@ module Guard
       #
       @source = local_path @config['source']
       @destination = local_path @config['destination']
-      @label = "Guard::Jekyll"
+      @msg_prefix = @options[:msg_prefix]
  
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
       #
@@ -57,10 +58,10 @@ module Guard
       if @options[:serve]
         start_server
         build
-        UI.info "#{@label} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
+        UI.info "#{@msg_prefix} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
       else
         build
-        UI.info "#{@label} " + "watching" unless @config[:silent]
+        UI.info "#{@msg_prefix} " + "watching" unless @config[:silent]
       end
     end
 
@@ -112,17 +113,17 @@ module Guard
 
     def build(files = nil, message = '', mark = nil)
       begin
-        UI.info "#{@label} #{message}" + "building...".yellow unless @config[:silent]
+        UI.info "#{@msg_prefix} #{message}" + "building...".yellow unless @config[:silent]
         if files
           puts '| ' # spacing
           files.each { |file| puts '|' + mark + file }
           puts '| ' # spacing
         end
         @site.process
-        UI.info "#{@label} " + "build complete ".green + "#{@source} → #{@destination}" unless @config[:silent]
+        UI.info "#{@msg_prefix} " + "build complete ".green + "#{@source} → #{@destination}" unless @config[:silent]
 
       rescue Exception => e
-        UI.error "#{@label} build has failed" unless @config[:silent]
+        UI.error "#{@msg_prefix} build has failed" unless @config[:silent]
         stop_server
         throw :task_has_failed
       end
@@ -134,7 +135,7 @@ module Guard
       begin
         message = 'copied file'
         message += 's' if files.size > 1
-        UI.info "#{@label} #{message.green}" unless @config[:silent]
+        UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
         puts '| ' #spacing
         files.each do |file|
           path = destination_path file
@@ -145,7 +146,7 @@ module Guard
         puts '| ' #spacing
 
       rescue Exception => e
-        UI.error "#{@label} copy has failed" unless @config[:silent]
+        UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
         UI.error e
         stop_server
         throw :task_has_failed
@@ -159,7 +160,7 @@ module Guard
       begin
         message = 'removed file'
         message += 's' if files.size > 1
-        UI.info "#{@label} #{message.red}" unless @config[:silent]
+        UI.info "#{@msg_prefix} #{message.red}" unless @config[:silent]
         puts '| ' #spacing
 
         files.each do |file|
@@ -178,7 +179,7 @@ module Guard
         puts '| ' #spacing
 
       rescue Exception => e
-        UI.error "#{@label} remove has failed" unless @config[:silent]
+        UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
         UI.error e
         stop_server
         throw :task_has_failed

@@ -34,3 +34,8 @@ New config options
 - Copy and remove ignore changes in directories beginning with an underscore.
 - Improved output for Jekyll build.
 
+### 1.2.3
+
+- Added configuration to change the message prefix for Guard UI 
+- Added license to gemspec
+
