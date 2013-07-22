@@ -39,3 +39,6 @@ New config options
 - Added configuration to change the message prefix for Guard UI 
 - Added license to gemspec
 
+### 1.3.0
+
+- Changed guard name to jekyll-plus to help Guard properly init the Guardfile.

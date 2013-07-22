@@ -38,7 +38,7 @@ Navigate to your Jekyll project directory and create a Guardfile using:
 Or if you already have a Guardfile, add a Jekyll guard.
 
 ```ruby
-guard :jekyllplus do
+guard "jekyll-plus" do
   watch /.*/
   ignore /^_site/
 end
@@ -46,7 +46,7 @@ end
 
 Run the guard and Jekyll will begin watching your project.
 
-    $ guard
+    $ bundle exec guard
 
 If your Jekyll project has a non-standard directory stucture like this:
 
@@ -59,7 +59,7 @@ If your Jekyll project has a non-standard directory stucture like this:
 You would do this instead:
 
 ```ruby
-guard :jekyllplus do
+guard "jekyll-plus" do
   watch /^source/
   watch /_config.yml/
 end
@@ -89,7 +89,7 @@ This guard has two configurations.
 Here's how you would add `txt` to the list of file extensions which triggers a Jekyll build.
 
 ```ruby
-guard :jekyllplus, :extensions => ['txt'] do
+guard "jekyll-plus", :extensions => ['txt'] do
   watch /.*/
   ignore /^_site/
 end
@@ -103,7 +103,7 @@ which don't match these extensions will be simply copied over to the destination
 Here's how you might tell Jekyll to read from multiple configuration files.
 
 ```ruby
-guard :jekyllplus, :config => ['settings.yml', 'override.yml'] do
+guard "jekyll-plus", :config => ['settings.yml', 'override.yml'] do
   watch /.*/
   ignore /^_site/
 end
