@@ -42,3 +42,9 @@ New config options
 ### 1.3.0
 
 - Changed guard name to jekyll-plus to help Guard properly init the Guardfile.
+
+### 1.4.0
+
+- Now allowing Rack server as an alternative to Jekyll's WEBrick server.
+- Ships with an internal config for Rack, but users can override it in the guard config options.
+

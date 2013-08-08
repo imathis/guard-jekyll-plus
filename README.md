@@ -75,14 +75,33 @@ This guard has two configurations.
 |:--------------|:-------------------------------------------------|:-----------------------------------------------------------------------------------|
 | `extensions`  | Array of file extensions to trigger Jekyll build | ['md', 'mkd', 'mkdn', 'markdown', 'textile', 'html', 'haml', 'slim', 'xml', 'yml'] |
 | `config`      | Array of configuration files                     | ['_config.yml']                                                                    |
-| `serve`       | Use Jekyll's build in WEBrick server             | false                                                                              |
+| `serve`       | Serve your site with Jekyll or a Rack server     | false                                                                              |
 | `drafts`      | Build your site with draft posts                 | false                                                                              |
 | `future`      | Build your site with future dated posts          | false                                                                              |
 | `config_hash` | Use a config hash instead of an array of files   | nil                                                                                |
 | `silent`      | Slience all output other than exception message  | false                                                                              |
 | `msg_prefix`  | Output messages are prefixed with with this      | 'Jekyll'                                                                           |
+| `rack_config` | Optional configuration for using the rack server | nil                                                                                |
 
 **Note:** customizations to the `extensions` configuration are additive.
+
+### Using Jekyll Server
+
+To use Jekyll's built-in server, simply set `:server => true` in your rack options
+
+```ruby
+guard "jekyll-plus", :server => true do
+  watch /.*/
+  ignore /^_site/
+end
+```
+
+### Using Rack Server
+
+Simply add `gem 'rack'` to your Gemfile and Jekyll Plus will use Rack instead with a [config file](lib/rack/config.ru) which redirects `404s` and auto-appends `index.html` to directory urls.
+If you want to use [Thin](https://github.com/macournoyer/thin/), add `gem 'thin'` instead.
+
+If you wish to use your own rack server configuration, simply drop a `config.ru` file into your site root, or use the option `:rack_config => 'path/to/config.ru'` to tell Jeklly Plus where to look for your rack config file.
 
 ### Configuring Jekyll watched file extensions
 

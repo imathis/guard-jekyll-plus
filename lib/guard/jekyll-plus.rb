@@ -4,6 +4,12 @@ require 'guard'
 require 'guard/guard'
 
 require 'jekyll'
+#begin require 'thin' rescue false end
+begin
+  require 'rack'
+  USE_RACK = true
+rescue LoadError
+end
 
 module Guard
   class Jekyllplus < Guard
@@ -14,14 +20,15 @@ module Guard
       default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
 
       @options = {
-        :extensions => [], 
-        :config => ['_config.yml'],
-        :serve => false,
-        :drafts => false,
-        :future => false,
-        :config_hash => nil,
-        :silent => false,
-        :msg_prefix => 'Jekyll'
+        :extensions     => [], 
+        :config         => ['_config.yml'],
+        :serve          => false,
+        :rack_config    => nil,
+        :drafts         => false,
+        :future         => false,
+        :config_hash    => nil,
+        :silent         => false,
+        :msg_prefix     => 'Jekyll'
       }.merge(options)
 
       # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
@@ -51,6 +58,8 @@ module Guard
       # Create a Jekyll site
       #
       @site = ::Jekyll::Site.new @config
+      @rack = ::Rack::Server.new(rack_config) if USE_RACK
+      puts @rack
 
     end
 
@@ -199,11 +208,18 @@ module Guard
       if options[:config_hash]
         config = options[:config_hash]
       elsif options[:config]
-        config_files = options[:config]
-        config_files = [config_files] unless config_files.is_a? Array
-        config = { "config" => config_files}
+        options[:config] = [options[:config]] unless options[:config].is_a? Array
+        config = options
       end
       ::Jekyll.configuration(config)
+    end
+
+    def rack_config
+      default_config = File.expand_path("../rack/config.ru", File.dirname(__FILE__))
+      local_config = File.exist? 'config.ru' ? 'config.ru' : nil
+      config = (@config['rack_config'] || local_config || default_config)
+      puts config
+      { :config => config, :Port => @config['port'], :Host => @config['host'] }
     end
 
     def local_path(path)
@@ -231,7 +247,11 @@ module Guard
     end
 
     def server(config)
-      proc{ Process.fork { ::Jekyll::Commands::Serve.process(config) } }
+      if @rack
+        proc{ Process.fork { @rack.start } }
+      else
+        proc{ Process.fork { ::Jekyll::Commands::Serve.process(config) } }
+      end
     end
 
     def kill
@@ -244,6 +264,7 @@ module Guard
     end
 
     def stop_server
+      #@rack.stop if @rack
       if alive?
         instance_eval do
           kill.call(@pid)
