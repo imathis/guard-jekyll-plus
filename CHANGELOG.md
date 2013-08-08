@@ -48,3 +48,7 @@ New config options
 - Now allowing Rack server as an alternative to Jekyll's WEBrick server.
 - Ships with an internal config for Rack, but users can override it in the guard config options.
 
+### 1.4.1
+
+- Rack root is now configured by Jekyll 'destination' configuration
+
