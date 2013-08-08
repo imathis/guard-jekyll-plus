@@ -69,7 +69,7 @@ For the most part that's all you'll ever need to do. There are some things you c
 
 ## Configuration
 
-This guard has two configurations.
+This guard has these configurations.
 
 | Config        | Description                                      | Default
 |:--------------|:-------------------------------------------------|:-----------------------------------------------------------------------------------|
