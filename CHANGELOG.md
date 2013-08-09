@@ -60,3 +60,7 @@ New config options
 
 - Removed some debugging output
 
+### 1.4.3
+
+- Removed more debugging output. Srsly?
+

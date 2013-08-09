@@ -59,7 +59,6 @@ module Guard
       #
       @site = ::Jekyll::Site.new @config
       @rack = ::Rack::Server.new(rack_config(@destination)) if USE_RACK
-      puts @rack
 
     end
 
@@ -265,7 +264,6 @@ module Guard
     end
 
     def stop_server
-      #@rack.stop if @rack
       if alive?
         instance_eval do
           kill.call(@pid)
