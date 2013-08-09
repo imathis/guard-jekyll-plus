@@ -2,6 +2,8 @@
 
 A Guard plugin for smarter Jekyll watching.
 
+[![Gem Version](https://badge.fury.io/rb/guard-jekyll-plus.png)](http://badge.fury.io/rb/guard-jekyll-plus)
+
 Features:
 
 - Changing static files won't trigger a jekyll build! Files are copied/removed instead.
