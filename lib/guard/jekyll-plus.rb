@@ -217,10 +217,9 @@ module Guard
     def rack_config(root)
       ENV['RACK_ROOT'] = root
       default_config = File.expand_path("../rack/config.ru", File.dirname(__FILE__))
-      local_config = File.exist? 'config.ru' ? 'config.ru' : nil
+      local_config = File.exist?('config.ru') ? 'config.ru' : nil
 
       config = (@config['rack_config'] || local_config || default_config)
-      puts config
       { :config => config, :Port => @config['port'], :Host => @config['host'] }
     end
 

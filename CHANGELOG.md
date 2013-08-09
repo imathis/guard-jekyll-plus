@@ -56,3 +56,7 @@ New config options
 
 - Unescape URLs in Rack (support for non-ASCII URLs)
 
+### 1.4.3
+
+- Removed some debugging output
+
