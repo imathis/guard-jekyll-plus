@@ -10,6 +10,7 @@ Features:
 - Batched processing! (Adding a directory of `n` files triggers a single build)
 - Reads options from your YAML config file(s)
 - Supports multiple config files (Jekyll 1.0)
+- Serve with Jekyll or Rack (just add rack to your gemfile)
 - Clear and colorized output
 
 Here's a look
