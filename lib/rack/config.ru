@@ -9,7 +9,7 @@ module Rack
     end
 
     def call(env)
-      orig_path = env['PATH_INFO']
+      orig_path = Rack::Utils.unescape env['PATH_INFO']
       found = nil
       @try.each do |path|
         resp = @static.call(env.merge!({'PATH_INFO' => orig_path + path}))
@@ -35,3 +35,4 @@ end
 root = ENV['RACK_ROOT'] || '_site'
 
 start_rack  root, "#{root}/404.html"
+

@@ -52,3 +52,7 @@ New config options
 
 - Rack root is now configured by Jekyll 'destination' configuration
 
+### 1.4.2
+
+- Unescape URLs in Rack (support for non-ASCII URLs)
+
