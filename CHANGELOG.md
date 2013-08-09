@@ -60,7 +60,11 @@ New config options
 
 - Removed some debugging output
 
-### 1.4.3
+### 1.4.4
 
 - Removed more debugging output. Srsly?
+
+### 1.4.5
+
+- Rack process is now succesfully killed on Guard stop
 

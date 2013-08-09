@@ -255,7 +255,7 @@ module Guard
     end
 
     def kill
-      proc{|pid| Process.kill("QUIT", pid)}
+      proc{|pid| Process.kill("INT", pid)}
     end
 
     def start_server
