@@ -2,12 +2,11 @@
 
 require 'guard'
 require 'guard/guard'
-
 require 'jekyll'
-#begin require 'thin' rescue false end
+
 begin
   require 'rack'
-  USE_RACK = true
+  @use_rack = true
 rescue LoadError
 end
 
@@ -58,7 +57,7 @@ module Guard
       # Create a Jekyll site
       #
       @site = ::Jekyll::Site.new @config
-      @rack = ::Rack::Server.new(rack_config(@destination)) if USE_RACK
+      @rack = ::Rack::Server.new(rack_config(@destination)) if @use_rack
 
     end
 

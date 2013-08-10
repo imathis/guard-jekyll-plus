@@ -1,7 +1,7 @@
 PATH
   remote: ../
   specs:
-    guard-jekyll-plus (1.4.4)
+    guard-jekyll-plus (1.4.6)
       guard (>= 1.1.0)
       jekyll (>= 1.0.0)
 
@@ -38,7 +38,7 @@ GEM
       safe_yaml (~> 0.7.0)
     kramdown (1.0.2)
     liquid (2.5.1)
-    listen (1.2.2)
+    listen (1.2.3)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
@@ -54,7 +54,6 @@ GEM
     pygments.rb (0.5.2)
       posix-spawn (~> 0.3.6)
       yajl-ruby (~> 1.1.0)
-    rack (1.5.2)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
@@ -72,4 +71,3 @@ PLATFORMS
 
 DEPENDENCIES
   guard-jekyll-plus!
-  rack

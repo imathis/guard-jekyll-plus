@@ -68,3 +68,7 @@ New config options
 
 - Rack process is now succesfully killed on Guard stop
 
+### 1.4.5
+
+- Rack is now actually optional (oops).
+
