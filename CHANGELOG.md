@@ -75,3 +75,7 @@ New config options
 ### 1.4.7
 
 - Double checks that there are files to remove before proceeding and printing remove message.
+
+### 1.4.8
+
+- Added a way to ignore Guard Stitch Plus's source files

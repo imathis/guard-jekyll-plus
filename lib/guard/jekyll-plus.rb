@@ -139,6 +139,7 @@ module Guard
     # Copy static files to destination directory
     #
     def copy(files=[])
+      files = ignore_stitch_sources files
       begin
         message = 'copied file'
         message += 's' if files.size > 1
@@ -161,9 +162,20 @@ module Guard
       true
     end
 
+    def ignore_stitch_sources(files)
+      if ENV['GUARD_STITCH_PLUS_FILES']
+        ignore = ENV['GUARD_STITCH_PLUS_FILES'].split(',')
+        files.reject {|f| ignore.include? f }
+      else
+        files
+      end
+      
+    end
+
     # Remove deleted source file/directories from destination
     #
     def remove(files=[])
+      files = ignore_stitch_sources files
       # Ensure at least one file still exists (other scripts may clean up too)
       if files.select {|f| File.exist? f }.size > 0
         begin
