@@ -68,7 +68,10 @@ New config options
 
 - Rack process is now succesfully killed on Guard stop
 
-### 1.4.5
+### 1.4.6
 
 - Rack is now actually optional (oops).
 
+### 1.4.7
+
+- Double checks that there are files to remove before proceeding and printing remove message.

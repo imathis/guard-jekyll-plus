@@ -164,34 +164,37 @@ module Guard
     # Remove deleted source file/directories from destination
     #
     def remove(files=[])
-      begin
-        message = 'removed file'
-        message += 's' if files.size > 1
-        UI.info "#{@msg_prefix} #{message.red}" unless @config[:silent]
-        puts '| ' #spacing
+      # Ensure at least one file still exists (other scripts may clean up too)
+      if files.select {|f| File.exist? f }.size > 0
+        begin
+          message = 'removed file'
+          message += 's' if files.size > 1
+          UI.info "#{@msg_prefix} #{message.red}" unless @config[:silent]
+          puts '| ' #spacing
 
-        files.each do |file|
-          path = destination_path file
-          if File.exist? path
-            FileUtils.rm path
-            puts '|' + "  x ".red + path
-          end
+          files.each do |file|
+            path = destination_path file
+            if File.exist? path
+              FileUtils.rm path
+              puts '|' + "  x ".red + path
+            end
 
-          dir = File.dirname path
-          if Dir[dir+'/*'].empty?
-            FileUtils.rm_r(dir) 
-            puts '|' + "  x ".red + dir
+            dir = File.dirname path
+            if Dir[dir+'/*'].empty?
+              FileUtils.rm_r(dir) 
+              puts '|' + "  x ".red + dir
+            end
           end
+          puts '| ' #spacing
+
+        rescue Exception => e
+          UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
+          UI.error e
+          stop_server
+          throw :task_has_failed
         end
-        puts '| ' #spacing
-
-      rescue Exception => e
-        UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
-        UI.error e
-        stop_server
-        throw :task_has_failed
+        true
       end
-      true
     end
 
     def jekyll_matches(paths)
