@@ -140,26 +140,28 @@ module Guard
     #
     def copy(files=[])
       files = ignore_stitch_sources files
-      begin
-        message = 'copied file'
-        message += 's' if files.size > 1
-        UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
-        puts '| ' #spacing
-        files.each do |file|
-          path = destination_path file
-          FileUtils.mkdir_p File.dirname(path)
-          FileUtils.cp file, path
-          puts '|' + "  → ".green + path
-        end
-        puts '| ' #spacing
+      if files.size > 0
+        begin
+          message = 'copied file'
+          message += 's' if files.size > 1
+          UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
+          puts '| ' #spacing
+          files.each do |file|
+            path = destination_path file
+            FileUtils.mkdir_p File.dirname(path)
+            FileUtils.cp file, path
+            puts '|' + "  → ".green + path
+          end
+          puts '| ' #spacing
 
-      rescue Exception => e
-        UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
-        UI.error e
-        stop_server
-        throw :task_has_failed
+        rescue Exception => e
+          UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
+          UI.error e
+          stop_server
+          throw :task_has_failed
+        end
+        true
       end
-      true
     end
 
     def ignore_stitch_sources(files)

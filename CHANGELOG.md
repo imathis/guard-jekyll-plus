@@ -78,4 +78,8 @@ New config options
 
 ### 1.4.8
 
-- Added a way to ignore Guard Stitch Plus's source files
+- Added a way to ignore Guard Stitch Plus's source files.
+
+### 1.4.9
+
+- Fix: Copying files ensures that there are files to copy before printing its message.
