@@ -13,6 +13,8 @@ Features:
 - Serve with Jekyll or Rack (just add rack to your gemfile)
 - Clear and colorized output
 
+If you want to compile javascripts, take a look at [guard-stitch-plus](https://github.com/imathis/guard-stitch-plus) and [jekyll-stitch-plus](https://github.com/imathis/jekyll-stitch-plus).
+
 Here's a look
 
 ![Colorized output](http://cl.ly/Q9qK/content.png)
