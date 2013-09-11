@@ -92,10 +92,10 @@ This guard has these configurations.
 
 ### Using Jekyll Server
 
-To use Jekyll's built-in server, simply set `:server => true` in your rack options
+To use Jekyll's built-in server, simply set `:serve => true` in your rack options
 
 ```ruby
-guard "jekyll-plus", :server => true do
+guard "jekyll-plus", :serve => true do
   watch /.*/
   ignore /^_site/
 end
