@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://github.com/imathis/guard-jekyll-plus"
   gem.license       = 'MIT'
 
-  gem.add_dependency 'guard', '>= 1.1.0'
+  gem.add_dependency 'guard', '~> 1.8.3'
   gem.add_dependency 'jekyll', '>= 1.0.0'
   
   gem.files         = `git ls-files`.split($/)
