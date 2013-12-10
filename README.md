@@ -33,7 +33,6 @@ Or install it manually with:
 
     $ gem install guard-jekyll-plus
 
-
 ## Usage
 
 Navigate to your Jekyll project directory and create a Guardfile using:
@@ -49,7 +48,10 @@ guard "jekyll-plus" do
 end
 ```
 
-Run the guard and Jekyll will begin watching your project.
+
+Add `Guardfile` to the list of files in your Jekyll's `exclude` configuration to prevent it from being copied into your site directory.
+
+Then run the guard and Jekyll will begin watching your project.
 
     $ bundle exec guard
 
