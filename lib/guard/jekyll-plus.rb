@@ -4,14 +4,13 @@ require 'guard'
 require 'guard/guard'
 require 'jekyll'
 
-begin
-  require 'rack'
-  @use_rack = true
-rescue LoadError
-end
-
 module Guard
   class Jekyllplus < Guard
+    begin
+      require 'rack'
+      @@use_rack = true
+    rescue LoadError
+    end
 
     def initialize (watchers=[], options={})
       super
@@ -57,7 +56,7 @@ module Guard
       # Create a Jekyll site
       #
       @site = ::Jekyll::Site.new @config
-      @rack = ::Rack::Server.new(rack_config(@destination)) if @use_rack
+      @rack = ::Rack::Server.new(rack_config(@destination)) if @@use_rack
 
     end
 
