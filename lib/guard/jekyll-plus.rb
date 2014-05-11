@@ -34,7 +34,7 @@ module Guard
       @msg_prefix = @options[:msg_prefix]
 
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
-      #
+      # 
       extensions  = @options[:extensions].concat(default_extensions).flatten.uniq
       @extensions = Regexp.new extensions.map { |e| (e << '$').gsub('\.', '\\.') }.join('|'), true
 
@@ -89,7 +89,6 @@ module Guard
       reload_config! if @options[:config].map { |f| paths.include?(f) }.any?
       matched = jekyll_matches paths
       unmatched = non_jekyll_matches paths
-
       if matched.size > 0
         build(matched, "Files changed: ", "  ~ ".yellow)
       elsif unmatched.size > 0
@@ -150,10 +149,14 @@ module Guard
           UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
           puts '| ' #spacing
           files.each do |file|
-            path = destination_path file
-            FileUtils.mkdir_p File.dirname(path)
-            FileUtils.cp file, path
-            puts '|' + "  → ".green + path
+            if(!check_jekyll_exclude(file))
+              path = destination_path file
+              FileUtils.mkdir_p File.dirname(path)
+              FileUtils.cp file, path
+              puts '|' + "  → ".green + path
+            else
+              puts '|' + "  ~ ".yellow + "'#{file}' detected in Jekyll exclude, not copying".red
+            end
           end
           puts '| ' #spacing
 
@@ -230,6 +233,10 @@ module Guard
         config = options
       end
       Jekyll.configuration(config)
+    end
+
+    def check_jekyll_exclude(path)
+      return @config['exclude'].any? {|f| File.fnmatch?(path, f)}
     end
 
     def rack_config(root)

@@ -1,2 +1,3 @@
 source: ./
 port: 4000
+exclude: ['Testfile', 'Guardfile', 'Gemfile', 'Gemfile.lock']
