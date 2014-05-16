@@ -19,7 +19,7 @@ module Guard
       default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
 
       @options = {
-        :extensions     => [], 
+        :extensions     => [],
         :config         => ['_config.yml'],
         :serve          => false,
         :rack_config    => nil,
@@ -34,7 +34,7 @@ module Guard
       @source = local_path @config['source']
       @destination = local_path @config['destination']
       @msg_prefix = @options[:msg_prefix]
- 
+
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
       #
       extensions  = @options[:extensions].concat(default_extensions).flatten.uniq
@@ -162,7 +162,7 @@ module Guard
           end
           puts '| ' #spacing
 
-        rescue Exception => e
+        rescue Exception
           UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
           UI.error e
           stop_server
@@ -179,7 +179,7 @@ module Guard
       else
         files
       end
-      
+
     end
 
     # Remove deleted source file/directories from destination
@@ -203,13 +203,13 @@ module Guard
 
             dir = File.dirname path
             if Dir[dir+'/*'].empty?
-              FileUtils.rm_r(dir) 
+              FileUtils.rm_r(dir)
               puts '|' + "  x ".red + dir
             end
           end
           puts '| ' #spacing
 
-        rescue Exception => e
+        rescue Exception
           UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
           UI.error e
           stop_server
@@ -252,20 +252,20 @@ module Guard
       path = path.sub current, ''
       if path == ''
         './'
-      else 
-        path.sub /^\//, ''
+      else
+        path.sub(/^\//, '')
       end
     end
-    
+
     def destination_path(file)
       if @source =~ /^\./
         File.join @destination, file
       else
-        file.sub /^#{@source}/, "#{@destination}"
+        file.sub(/^#{@source}/, "#{@destination}")
       end
     end
 
-    # Remove 
+    # Remove
     def ignore_underscores(paths)
       paths.select { |file| file =~ /^[^_]/  }
     end
@@ -284,7 +284,7 @@ module Guard
 
     def start_server
       return @pid if alive?
-      @pid = instance_eval &server(@config)
+      @pid = instance_eval(&server(@config))
     end
 
     def stop_server
@@ -295,14 +295,14 @@ module Guard
         end
       end
     end
-    
+
     def alive?
       return false unless @pid
 
       begin
         Process.getpgid(@pid)
         true
-      rescue Errno::ESRCH => e
+      rescue Errno::ESRCH
         false
       end
     end
