@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+require 'benchmark'
 require 'guard'
 require 'guard/guard'
 require 'jekyll'
@@ -29,17 +30,7 @@ module Guard
         :msg_prefix     => 'Jekyll'
       }.merge(options)
 
-      # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
-      #
-      @config = jekyll_config(@options)
-
-      # Override configuration with guard option values
-      #
-      @config['show_drafts'] ||= @options[:drafts]
-      @config['future']      ||= @options[:future]
-
-      # Store vars for easy internal access
-      #
+      @config = load_config(@options)
       @source = local_path @config['source']
       @destination = local_path @config['destination']
       @msg_prefix = @options[:msg_prefix]
@@ -60,6 +51,20 @@ module Guard
 
     end
 
+    def load_config(options)
+      config = jekyll_config(options)
+
+      # Override configuration with guard option values
+      config['show_drafts'] ||= options[:drafts]
+      config['future']      ||= options[:future]
+      config
+    end
+
+    def reload_config!
+      UI.info "Reloading Jekyll configuration!"
+      @config = load_config(@options)
+    end
+
     def start
       if @options[:serve]
         start_server
@@ -73,15 +78,20 @@ module Guard
 
     def restart
       stop if alive?
+      reload_config!
       start
     end
 
+    alias_method :reload, :restart
 
     def stop
       stop_server
     end
 
     def run_on_modifications(paths)
+      # At this point we know @options[:config] is going to be an Array
+      # thanks to the call the jekyll_config earlier.
+      reload_config! if @options[:config].map { |f| paths.include?(f) }.any?
       matched = jekyll_matches paths
       unmatched = non_jekyll_matches paths
 
@@ -125,10 +135,9 @@ module Guard
           files.each { |file| puts '|' + mark + file }
           puts '| ' # spacing
         end
-        @site.process
-        UI.info "#{@msg_prefix} " + "build complete ".green + "#{@source} → #{@destination}" unless @config[:silent]
-
-      rescue Exception => e
+        elapsed = Benchmark.realtime { ::Jekyll::Site.new(@config).process }
+        UI.info "#{@msg_prefix} " + "build completed in #{elapsed.round(2)}s ".green + "#{@source} → #{@destination}" unless @config[:silent]
+      rescue Exception
         UI.error "#{@msg_prefix} build has failed" unless @config[:silent]
         stop_server
         throw :task_has_failed
