@@ -39,15 +39,12 @@ module Guard
       extensions  = @options[:extensions].concat(default_extensions).flatten.uniq
       @extensions = Regexp.new extensions.map { |e| (e << '$').gsub('\.', '\\.') }.join('|'), true
 
-      # set Jekyll server process id to nil
-      #
-      @pid = nil
+      # set Jekyll server thread to nil
+      @server_thread = nil
 
       # Create a Jekyll site
       #
       @site = ::Jekyll::Site.new @config
-      @rack = ::Rack::Server.new(rack_config(@destination)) if @@use_rack
-
     end
 
     def load_config(options)
@@ -66,8 +63,8 @@ module Guard
 
     def start
       if @options[:serve]
-        start_server
         build
+        start_server
         UI.info "#{@msg_prefix} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
       else
         build
@@ -245,7 +242,7 @@ module Guard
       local_config = File.exist?('config.ru') ? 'config.ru' : nil
 
       config = (@config['rack_config'] || local_config || default_config)
-      { :config => config, :Port => @config['port'], :Host => @config['host'] }
+      { :config => config, :Port => @config['port'], :Host => @config['host'], :environment => 'development' }
     end
 
     def local_path(path)
@@ -273,10 +270,11 @@ module Guard
     end
 
     def server(config)
-      if @rack
-        proc{ Process.fork { @rack.start } }
+      if @@use_rack
+        Thread.new { ::Rack::Server.start(rack_config(@destination)) }
+        UI.info "#{@msg_prefix} running Rack" unless @config[:silent]
       else
-        proc{ Process.fork { ::Jekyll::Commands::Serve.process(config) } }
+        Thread.new { ::Jekyll::Commands::Serve.process(config) }
       end
     end
 
@@ -285,17 +283,16 @@ module Guard
     end
 
     def start_server
-      return @pid if alive?
-      @pid = instance_eval(&server(@config))
+      if @server_thread.nil?
+        @server_thread = server(@config)
+      else
+        UI.warn "#{@msg_prefix} using an old server thread!"
+      end
     end
 
     def stop_server
-      if alive?
-        instance_eval do
-          kill.call(@pid)
-          @pid = nil
-        end
-      end
+      @server_thread.kill unless @server_thread.nil?
+      @server_thread = nil
     end
 
     def alive?
