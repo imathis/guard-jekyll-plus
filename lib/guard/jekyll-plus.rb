@@ -1,19 +1,18 @@
 # encoding: UTF-8
 
 require 'benchmark'
-require 'guard'
-require 'guard/guard'
+require 'guard/plugin'
 require 'jekyll'
 
 module Guard
-  class Jekyllplus < Guard
+  class Jekyllplus < Plugin
     begin
       require 'rack'
       @@use_rack = true
     rescue LoadError
     end
 
-    def initialize (watchers=[], options={})
+    def initialize(options = {})
       super
 
       default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
@@ -76,13 +75,16 @@ module Guard
       end
     end
 
-    def restart
+    def reload
       stop if alive?
       reload_config!
       start
     end
 
-    alias_method :reload, :restart
+    def reload_server
+      stop_server
+      start_server
+    end
 
     def stop
       stop_server
