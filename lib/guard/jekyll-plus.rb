@@ -73,7 +73,7 @@ module Guard
     end
 
     def reload
-      stop if alive?
+      stop if !@server_thread.nil? and @server_thread.alive?
       reload_config!
       start
     end
@@ -278,32 +278,17 @@ module Guard
       end
     end
 
-    def kill
-      proc{|pid| Process.kill("INT", pid)}
-    end
-
     def start_server
       if @server_thread.nil?
         @server_thread = server(@config)
       else
-        UI.warn "#{@msg_prefix} using an old server thread!"
+        UI.warning "#{@msg_prefix} using an old server thread!"
       end
     end
 
     def stop_server
       @server_thread.kill unless @server_thread.nil?
       @server_thread = nil
-    end
-
-    def alive?
-      return false unless @pid
-
-      begin
-        Process.getpgid(@pid)
-        true
-      rescue Errno::ESRCH
-        false
-      end
     end
   end
 end
