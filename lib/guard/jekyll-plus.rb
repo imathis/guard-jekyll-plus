@@ -292,4 +292,3 @@ module Guard
     end
   end
 end
-
