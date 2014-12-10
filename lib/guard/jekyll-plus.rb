@@ -15,7 +15,7 @@ module Guard
     def initialize(options = {})
       super
 
-      default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
+      default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml','sass','scss']
 
       @options = {
         :extensions     => [],
