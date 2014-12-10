@@ -1,25 +1,24 @@
 # encoding: UTF-8
 
-require 'guard'
-require 'guard/guard'
+require 'benchmark'
+require 'guard/plugin'
 require 'jekyll'
 
-begin
-  require 'rack'
-  @use_rack = true
-rescue LoadError
-end
-
 module Guard
-  class Jekyllplus < Guard
+  class Jekyllplus < Plugin
+    begin
+      require 'rack'
+      @@use_rack = true
+    rescue LoadError
+    end
 
-    def initialize (watchers=[], options={})
+    def initialize(options = {})
       super
 
       default_extensions = ['md','mkd','mkdn','markdown','textile','html','haml','slim','xml','yml']
 
       @options = {
-        :extensions     => [], 
+        :extensions     => [],
         :config         => ['_config.yml'],
         :serve          => false,
         :rack_config    => nil,
@@ -30,41 +29,42 @@ module Guard
         :msg_prefix     => 'Jekyll'
       }.merge(options)
 
-      # The config_hash option should be a hash ready to be consumed by Jekyll's Site class.
-      #
-      @config = jekyll_config(@options)
-
-      # Override configuration with guard option values
-      #
-      @config['show_drafts'] ||= @options[:drafts]
-      @config['future']      ||= @options[:future]
-
-      # Store vars for easy internal access
-      #
+      @config = load_config(@options)
       @source = local_path @config['source']
       @destination = local_path @config['destination']
       @msg_prefix = @options[:msg_prefix]
- 
+
       # Convert array of extensions into a regex for matching file extensions eg, /\.md$|\.markdown$|\.html$/i
       #
       extensions  = @options[:extensions].concat(default_extensions).flatten.uniq
       @extensions = Regexp.new extensions.map { |e| (e << '$').gsub('\.', '\\.') }.join('|'), true
 
-      # set Jekyll server process id to nil
-      #
-      @pid = nil
+      # set Jekyll server thread to nil
+      @server_thread = nil
 
       # Create a Jekyll site
       #
       @site = ::Jekyll::Site.new @config
-      @rack = ::Rack::Server.new(rack_config(@destination)) if @use_rack
+    end
 
+    def load_config(options)
+      config = jekyll_config(options)
+
+      # Override configuration with guard option values
+      config['show_drafts'] ||= options[:drafts]
+      config['future']      ||= options[:future]
+      config
+    end
+
+    def reload_config!
+      UI.info "Reloading Jekyll configuration!"
+      @config = load_config(@options)
     end
 
     def start
       if @options[:serve]
-        start_server
         build
+        start_server
         UI.info "#{@msg_prefix} " + "watching and serving at #{@config['host']}:#{@config['port']}#{@config['baseurl']}" unless @config[:silent]
       else
         build
@@ -72,17 +72,25 @@ module Guard
       end
     end
 
-    def restart
-      stop if alive?
+    def reload
+      stop if !@server_thread.nil? and @server_thread.alive?
+      reload_config!
       start
     end
 
+    def reload_server
+      stop_server
+      start_server
+    end
 
     def stop
       stop_server
     end
 
     def run_on_modifications(paths)
+      # At this point we know @options[:config] is going to be an Array
+      # thanks to the call the jekyll_config earlier.
+      reload_config! if @options[:config].map { |f| paths.include?(f) }.any?
       matched = jekyll_matches paths
       unmatched = non_jekyll_matches paths
 
@@ -126,10 +134,9 @@ module Guard
           files.each { |file| puts '|' + mark + file }
           puts '| ' # spacing
         end
-        @site.process
-        UI.info "#{@msg_prefix} " + "build complete ".green + "#{@source} → #{@destination}" unless @config[:silent]
-
-      rescue Exception => e
+        elapsed = Benchmark.realtime { ::Jekyll::Site.new(@config).process }
+        UI.info "#{@msg_prefix} " + "build completed in #{elapsed.round(2)}s ".green + "#{@source} → #{@destination}" unless @config[:silent]
+      rescue Exception
         UI.error "#{@msg_prefix} build has failed" unless @config[:silent]
         stop_server
         throw :task_has_failed
@@ -154,7 +161,7 @@ module Guard
           end
           puts '| ' #spacing
 
-        rescue Exception => e
+        rescue Exception
           UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
           UI.error e
           stop_server
@@ -171,7 +178,7 @@ module Guard
       else
         files
       end
-      
+
     end
 
     # Remove deleted source file/directories from destination
@@ -195,13 +202,13 @@ module Guard
 
             dir = File.dirname path
             if Dir[dir+'/*'].empty?
-              FileUtils.rm_r(dir) 
+              FileUtils.rm_r(dir)
               puts '|' + "  x ".red + dir
             end
           end
           puts '| ' #spacing
 
-        rescue Exception => e
+        rescue Exception
           UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
           UI.error e
           stop_server
@@ -235,7 +242,7 @@ module Guard
       local_config = File.exist?('config.ru') ? 'config.ru' : nil
 
       config = (@config['rack_config'] || local_config || default_config)
-      { :config => config, :Port => @config['port'], :Host => @config['host'] }
+      { :config => config, :Port => @config['port'], :Host => @config['host'], :environment => 'development' }
     end
 
     def local_path(path)
@@ -244,60 +251,44 @@ module Guard
       path = path.sub current, ''
       if path == ''
         './'
-      else 
-        path.sub /^\//, ''
+      else
+        path.sub(/^\//, '')
       end
     end
-    
+
     def destination_path(file)
       if @source =~ /^\./
         File.join @destination, file
       else
-        file.sub /^#{@source}/, "#{@destination}"
+        file.sub(/^#{@source}/, "#{@destination}")
       end
     end
 
-    # Remove 
+    # Remove
     def ignore_underscores(paths)
       paths.select { |file| file =~ /^[^_]/  }
     end
 
     def server(config)
-      if @rack
-        proc{ Process.fork { @rack.start } }
+      if @@use_rack
+        Thread.new { ::Rack::Server.start(rack_config(@destination)) }
+        UI.info "#{@msg_prefix} running Rack" unless @config[:silent]
       else
-        proc{ Process.fork { ::Jekyll::Commands::Serve.process(config) } }
+        Thread.new { ::Jekyll::Commands::Serve.process(config) }
       end
-    end
-
-    def kill
-      proc{|pid| Process.kill("INT", pid)}
     end
 
     def start_server
-      return @pid if alive?
-      @pid = instance_eval &server(@config)
+      if @server_thread.nil?
+        @server_thread = server(@config)
+      else
+        UI.warning "#{@msg_prefix} using an old server thread!"
+      end
     end
 
     def stop_server
-      if alive?
-        instance_eval do
-          kill.call(@pid)
-          @pid = nil
-        end
-      end
-    end
-    
-    def alive?
-      return false unless @pid
-
-      begin
-        Process.getpgid(@pid)
-        true
-      rescue Errno::ESRCH => e
-        false
-      end
+      @server_thread.kill unless @server_thread.nil?
+      @server_thread = nil
     end
   end
 end
-
