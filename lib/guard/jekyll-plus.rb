@@ -155,7 +155,7 @@ module Guard
               FileUtils.cp file, path
               puts '|' + "  → ".green + path
             else
-              puts '|' + "  ~ ".yellow + "'#{file}' detected in Jekyll exclude, not copying".red
+              puts '|' + "  ~ ".yellow + "Jekyll exclude: Ignoring changes to #{file}".yellow
             end
           end
           puts '| ' #spacing
