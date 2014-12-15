@@ -1,4 +1,4 @@
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 require 'nenv'
 
 require 'rspec/core/rake_task'
