@@ -1,6 +1,6 @@
 # Changelog
 
-### 2.0.0
+### 2.0.0 - 12-15-2014
 
 - Updated to work with Guard 2.x
 
