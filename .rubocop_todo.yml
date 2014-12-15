@@ -6,10 +6,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 4
-Lint/AmbiguousRegexpLiteral:
-  Enabled: false
-
-# Offense count: 4
 Metrics/AbcSize:
   Max: 37
 
