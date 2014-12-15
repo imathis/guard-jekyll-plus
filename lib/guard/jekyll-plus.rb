@@ -8,7 +8,7 @@ module Guard
   class Jekyllplus < Plugin
     begin
       require 'rack'
-      @@use_rack = true
+      @use_rack = true
     rescue LoadError
     end
 
@@ -270,7 +270,7 @@ module Guard
     end
 
     def server(config)
-      if @@use_rack
+      if @use_rack
         Thread.new { ::Rack::Server.start(rack_config(@destination)) }
         UI.info "#{@msg_prefix} running Rack" unless @config[:silent]
       else
