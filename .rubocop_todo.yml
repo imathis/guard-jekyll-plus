@@ -39,8 +39,3 @@ Metrics/PerceivedComplexity:
 # Offense count: 2
 Style/Documentation:
   Enabled: false
-
-# Offense count: 2
-# Configuration parameters: Exclude.
-Style/FileName:
-  Enabled: false
