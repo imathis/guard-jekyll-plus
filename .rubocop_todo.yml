@@ -56,8 +56,3 @@ Style/Documentation:
 # Configuration parameters: Exclude.
 Style/FileName:
   Enabled: false
-
-# Offense count: 2
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Enabled: false

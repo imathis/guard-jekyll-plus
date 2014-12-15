@@ -141,32 +141,31 @@ module Guard
     #
     def copy(files = [])
       files = ignore_stitch_sources files
-      if files.size > 0
-        begin
-          message = 'copied file'
-          message += 's' if files.size > 1
-          UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
-          puts '| ' # spacing
-          files.each do |file|
-            if(!check_jekyll_exclude(file))
-              path = destination_path file
-              FileUtils.mkdir_p File.dirname(path)
-              FileUtils.cp file, path
-              puts '|' + '  → '.green + path
-            else
-              puts '|' + '  ~ '.yellow + "Jekyll exclude: Ignoring changes to #{file}".yellow
-            end
-          end
-          puts '| ' # spacing
+      return if files.empty?
 
-        rescue Exception
-          UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
-          UI.error e
-          stop_server
-          throw :task_has_failed
+      message = 'copied file'
+      message += 's' if files.size > 1
+      UI.info "#{@msg_prefix} #{message.green}" unless @config[:silent]
+      puts '| ' # spacing
+
+      files.each do |file|
+        if(!check_jekyll_exclude(file))
+          path = destination_path file
+          FileUtils.mkdir_p File.dirname(path)
+          FileUtils.cp file, path
+          puts '|' + '  → '.green + path
+        else
+          puts '|' + '  ~ '.yellow + "Jekyll exclude: Ignoring changes to #{file}".yellow
         end
-        true
       end
+      puts '| ' # spacing
+      true
+
+    rescue Exception
+      UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
+      UI.error e
+      stop_server
+      throw :task_has_failed
     end
 
     def ignore_stitch_sources(files)
@@ -183,36 +182,35 @@ module Guard
     def remove(files = [])
       files = ignore_stitch_sources files
       # Ensure at least one file still exists (other scripts may clean up too)
-      if files.select { |f| File.exist? f }.size > 0
-        begin
-          message = 'removed file'
-          message += 's' if files.size > 1
-          UI.info "#{@msg_prefix} #{message.red}" unless @config[:silent]
-          puts '| ' # spacing
 
-          files.each do |file|
-            path = destination_path file
-            if File.exist? path
-              FileUtils.rm path
-              puts '|' + '  x '.red + path
-            end
+      return if files.none? { |f| File.exist?(f) }
 
-            dir = File.dirname path
-            if Dir[dir + '/*'].empty?
-              FileUtils.rm_r(dir)
-              puts '|' + '  x '.red + dir
-            end
-          end
-          puts '| ' # spacing
+      message = 'removed file'
+      message += 's' if files.size > 1
+      UI.info "#{@msg_prefix} #{message.red}" unless @config[:silent]
+      puts '| ' # spacing
 
-        rescue Exception
-          UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
-          UI.error e
-          stop_server
-          throw :task_has_failed
+      files.each do |file|
+        path = destination_path file
+        if File.exist? path
+          FileUtils.rm path
+          puts '|' + '  x '.red + path
         end
-        true
+
+        dir = File.dirname path
+        if Dir[dir + '/*'].empty?
+          FileUtils.rm_r(dir)
+          puts '|' + '  x '.red + dir
+        end
       end
+      puts '| ' # spacing
+      true
+
+    rescue Exception
+      UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
+      UI.error e
+      stop_server
+      throw :task_has_failed
     end
 
     def jekyll_matches(paths)
