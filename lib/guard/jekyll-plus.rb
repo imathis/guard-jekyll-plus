@@ -4,14 +4,13 @@ require 'benchmark'
 require 'guard/plugin'
 require 'jekyll'
 
+begin
+  require 'rack'
+rescue LoadError
+end
+
 module Guard
   class Jekyllplus < Plugin
-    begin
-      require 'rack'
-      @use_rack = true
-    rescue LoadError
-    end
-
     def initialize(options = {})
       super
 
@@ -42,9 +41,6 @@ module Guard
       # set Jekyll server thread to nil
       @server_thread = nil
 
-      # Create a Jekyll site
-      #
-      @site = ::Jekyll::Site.new @config
     end
 
     def load_config(options)
@@ -134,7 +130,7 @@ module Guard
           files.each { |file| puts '|' + mark + file }
           puts '| ' # spacing
         end
-        elapsed = Benchmark.realtime { ::Jekyll::Site.new(@config).process }
+        elapsed = Benchmark.realtime { build_site(@config) }
         UI.info "#{@msg_prefix} " + "build completed in #{elapsed.round(2)}s ".green + "#{@source} → #{@destination}" unless @config[:silent]
       rescue Exception
         UI.error "#{@msg_prefix} build has failed" unless @config[:silent]
@@ -256,6 +252,14 @@ module Guard
       end
     end
 
+    def build_site(options)
+      Jekyll.logger.log_level = :error
+      site = Jekyll::Site.new(options)
+      Jekyll.logger.log_level = :info
+      site.process
+    end
+    
+
     def destination_path(file)
       if @source =~ /^\./
         File.join @destination, file
@@ -270,7 +274,7 @@ module Guard
     end
 
     def server(config)
-      if @use_rack
+      if defined? ::Rack
         Thread.new { ::Rack::Server.start(rack_config(@destination)) }
         UI.info "#{@msg_prefix} running Rack" unless @config[:silent]
       else

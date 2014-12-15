@@ -16,6 +16,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'guard', '~> 2.8'
   gem.add_dependency 'jekyll', '>= 1.0.0'
 
+  if RUBY_VERSION >= "2"
+    gem.add_development_dependency "pry-byebug"
+  end
+
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
 end
