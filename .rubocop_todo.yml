@@ -36,10 +36,6 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
-# Offense count: 1
-Style/ClassVars:
-  Enabled: false
-
 # Offense count: 2
 Style/Documentation:
   Enabled: false
