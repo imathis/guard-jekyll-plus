@@ -229,7 +229,7 @@ module Guard
         options[:config] = [options[:config]] unless options[:config].is_a? Array
         config = options
       end
-      ::Jekyll.configuration(config)
+      Jekyll.configuration(config)
     end
 
     def rack_config(root)
@@ -268,17 +268,12 @@ module Guard
       end
     end
 
-    # Remove
-    def ignore_underscores(paths)
-      paths.select { |file| file =~ /^[^_]/  }
-    end
-
     def server(config)
       if defined? ::Rack
         Thread.new { ::Rack::Server.start(rack_config(@destination)) }
         UI.info "#{@msg_prefix} running Rack" unless @config[:silent]
       else
-        Thread.new { ::Jekyll::Commands::Serve.process(config) }
+        Thread.new { Jekyll::Commands::Serve.process(config) }
       end
     end
 
