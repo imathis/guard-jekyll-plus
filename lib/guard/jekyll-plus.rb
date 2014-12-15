@@ -131,8 +131,9 @@ module Guard
       elapsed = Benchmark.realtime { build_site(@config) }
 
       UI.info "#{@msg_prefix} " + "build completed in #{elapsed.round(2)}s ".green + "#{@source} → #{@destination}" unless @config[:silent]
-    rescue Exception
+    rescue RuntimeError => e
       UI.error "#{@msg_prefix} build has failed" unless @config[:silent]
+      UI.error e.to_s
       stop_server
       throw :task_has_failed
     end
@@ -161,7 +162,7 @@ module Guard
       puts '| ' # spacing
       true
 
-    rescue Exception
+    rescue StandardError => e
       UI.error "#{@msg_prefix} copy has failed" unless @config[:silent]
       UI.error e
       stop_server
@@ -206,7 +207,7 @@ module Guard
       puts '| ' # spacing
       true
 
-    rescue Exception
+    rescue StandardError => e
       UI.error "#{@msg_prefix} remove has failed" unless @config[:silent]
       UI.error e
       stop_server
