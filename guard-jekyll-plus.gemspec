@@ -13,13 +13,16 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://github.com/imathis/guard-jekyll-plus"
   gem.license       = 'MIT'
 
+  gem.files         = `git ls-files`.split($/)
+  gem.require_paths = ["lib"]
+
   gem.add_dependency 'guard', '~> 2.8'
   gem.add_dependency 'jekyll', '>= 1.0.0'
 
-  if RUBY_VERSION >= "2"
-    gem.add_development_dependency "pry-byebug"
-  end
+  gem.add_development_dependency "rake"
+  gem.add_development_dependency "pry-byebug"
 
-  gem.files         = `git ls-files`.split($/)
-  gem.require_paths = ["lib"]
+  if RUBY_VERSION >= "2"
+    gem.add_development_dependency "bundler"
+  end
 end

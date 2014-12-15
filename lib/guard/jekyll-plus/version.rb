@@ -1,5 +1,5 @@
 module Guard
   class JekyllPlusVersion
-    VERSION = "1.4.11"
+    VERSION = "2.0.0"
   end
 end
