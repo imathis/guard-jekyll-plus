@@ -19,7 +19,9 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.require_paths = ['lib']
 
-  gem.add_dependency 'guard', '~> 2.8'
+  gem.add_dependency 'guard', '~> 2.10', '>= 2.10.3'
+  gem.add_dependency 'guard-compat', '~> 1.1'
+
   gem.add_dependency 'jekyll', '>= 1.0.0'
 
   gem.add_development_dependency "rake"
