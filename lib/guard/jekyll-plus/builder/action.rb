@@ -84,14 +84,14 @@ module Guard
         end
 
         def copy(src, dst)
-          if(!check_jekyll_exclude(file))
-            FileUtils.mkdir_p File.dirname(dst)
-            FileUtils.cp src, dst
-            puts '|' + '  → '.green + dst
-          else
-            msg = "Jekyll exclude: Ignoring changes to #{file}".yellow
-            puts '|' + '  ~ '.yellow + msg
+          if @config.excluded?(src)
+            puts '|' + ('  ~ ' + "Ignoring excluded file: #{src}").yellow
+            return
           end
+
+          FileUtils.mkdir_p File.dirname(dst)
+          FileUtils.cp src, dst
+          puts '|' + '  → '.green + dst
         end
 
         def remove(path)

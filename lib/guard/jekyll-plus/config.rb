@@ -87,6 +87,10 @@ module Guard
       alias_method :server_root, :destination
       alias_method :jekyll_serve_options, :jekyll_config
 
+      def excluded?(path)
+        @jekyll_config['exclude'].any? { |glob| File.fnmatch?(glob, path) }
+      end
+
       private
 
       def silent?

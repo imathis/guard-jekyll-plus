@@ -31,10 +31,29 @@ module Guard
       context 'when assets change' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:excluded?).with('foo.jpg').and_return(false)
         end
 
         it 'copies files' do
           expect(FileUtils).to receive(:cp).with('foo.jpg', 'bar/foo.jpg')
+          subject.update(%w(foo.jpg))
+        end
+      end
+
+      context 'when excluded file changes' do
+        before do
+          allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:excluded?).with('foo.jpg').and_return(true)
+        end
+
+        it 'does not copy anything' do
+          expect(FileUtils).to_not receive(:cp)
+          subject.update(%w(foo.jpg))
+        end
+
+        it 'shows which files were excluded' do
+          expect($stdout).to receive(:puts)
+            .with(/Ignoring excluded file: foo\.jpg/)
           subject.update(%w(foo.jpg))
         end
       end
@@ -44,6 +63,7 @@ module Guard
           allow(config).to receive(:destination).and_return('bar/')
           allow(FileUtils).to receive(:cp).and_raise(Errno::ENOENT, 'foo')
           allow(config).to receive(:error)
+          allow(config).to receive(:excluded?).with('foo').and_return(false)
         end
 
         it 'shows an error' do

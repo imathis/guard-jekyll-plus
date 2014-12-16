@@ -121,4 +121,18 @@ RSpec.describe Guard::Jekyllplus::Config do
       end
     end
   end
+
+  describe '#excluded?' do
+    context 'with excludes in Jekyll' do
+      let(:jekyll_config) do
+        valid_jekyll_options.merge('exclude' => ['f*', 'b*z'])
+      end
+
+      it 'matches files excluded in Jekyll' do
+        expect(subject.excluded?('foo')).to be_truthy
+        expect(subject.excluded?('bar')).to be_falsey
+        expect(subject.excluded?('baz')).to be_truthy
+      end
+    end
+  end
 end
