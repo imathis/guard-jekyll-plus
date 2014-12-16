@@ -21,4 +21,24 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  config.before do
+    %w(cp rm_r rm mkdir mkdir_p).each do |meth|
+      allow(FileUtils).to receive(meth) do |*args|
+        fail "stub me: FileUtils.#{meth}(#{args.map(&:inspect).join(', ')})"
+      end
+    end
+
+    %w(exist?).each do |meth|
+      allow(File).to receive(meth) do |*args|
+        fail "stub me: File.#{meth}(#{args.map(&:inspect).join(', ')})"
+      end
+    end
+
+    %w([]).each do |meth|
+      allow(Dir).to receive(meth) do |*args|
+        fail "stub me: Dir.#{meth}(#{args.map(&:inspect).join(', ')})"
+      end
+    end
+  end
 end
