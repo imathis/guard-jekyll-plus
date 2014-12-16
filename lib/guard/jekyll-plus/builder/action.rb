@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'benchmark'
 require 'jekyll'
 require 'guard/compat/plugin'
