@@ -38,7 +38,9 @@ module Guard
           change = format('%s → %s', @config.source, @config.destination)
           @config.info format('build completed in %ss '.green + change, elapsed)
 
-        rescue RuntimeError => e
+          # rescue almost everything because Jekyll::Convertible forwards
+          # every plugin-specific exception it encounters
+        rescue StandardError => e
           @config.error 'build has failed'
           @config.error e.to_s
           throw :task_has_failed

@@ -16,7 +16,10 @@ module Guard
         def update
           header(nil)
           benchmark { @site.process }
-        rescue RuntimeError, SystemCallError => e
+
+        # rescue almost everything because Jekyll::Convertible forwards
+        # every plugin-specific exception it encounters
+        rescue StandardError => e
           @config.error "#{@name} has failed"
           @config.error e.to_s
           throw :task_has_failed

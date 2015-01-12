@@ -25,7 +25,33 @@ module Guard
         subject.update
       end
 
-      context 'when an error happens' do
+      # NOTE: Jekyll just shows a message and passes the plugin,
+      # so it can fail with almost any possible exception.
+      #
+      # We catch StandardError to at least be somewhat reasonable
+      context 'when an Jekyll conversion error happens' do
+        before do
+          allow(config).to receive(:error)
+          allow(site).to receive(:process)
+            .and_raise(NoMethodError, 'something in Haml template failed')
+        end
+
+        it 'shows an error' do
+          expect(config).to receive(:error).with('build has failed')
+          expect(config).to receive(:error).with(/something in Haml template/)
+          catch(:task_has_failed) do
+            subject.update
+          end
+        end
+
+        it 'throws task_has_failed symbol' do
+          expect do
+            subject.update
+          end.to throw_symbol(:task_has_failed)
+        end
+      end
+
+      context 'when a system error happens' do
         before do
           allow(config).to receive(:error)
           allow(site).to receive(:process).and_raise(RuntimeError, 'big error')

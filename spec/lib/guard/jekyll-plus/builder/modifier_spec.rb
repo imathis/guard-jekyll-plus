@@ -58,6 +58,34 @@ module Guard
         end
       end
 
+      # NOTE: Jekyll just shows a message and passes the plugin,
+      # so it can fail with almost any possible exception.
+      #
+      # We catch StandardError to at least be somewhat reasonable
+      context 'when an Jekyll conversion error happens' do
+        before do
+          allow(site).to receive(:process)
+            .and_raise(NoMethodError, 'error evaluating Haml file')
+
+          allow(config).to receive(:error)
+        end
+
+        it 'shows an error' do
+          expect(config).to receive(:error).with('build has failed')
+          expect(config).to receive(:error).with(/error evaluating Haml file/)
+
+          catch(:task_has_failed) do
+            subject.update(%w(foo.haml))
+          end
+        end
+
+        it 'throws task_has_failed symbol' do
+          expect do
+            subject.update(%w(foo.haml))
+          end.to throw_symbol(:task_has_failed)
+        end
+      end
+
       context 'when an error happens' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
