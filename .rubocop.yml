@@ -1,0 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - Guardfile
+
+Style/FileName:
+  Exclude:
+    - lib/guard/jekyll-plus.rb
+    - spec/lib/guard/jekyll-plus_spec.rb
