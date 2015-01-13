@@ -1,17 +1,17 @@
 require 'guard/compat/test/helper'
-require 'guard/jekyll-plus'
+require 'guard/jekyll_plus'
 
-RSpec.describe Guard::Jekyllplus do
-  let(:server) { instance_double(Guard::Jekyllplus::Server) }
-  let(:config) { instance_double(Guard::Jekyllplus::Config) }
-  let(:builder) { instance_double(Guard::Jekyllplus::Builder) }
+RSpec.describe Guard::JekyllPlus do
+  let(:server) { instance_double(Guard::JekyllPlus::Server) }
+  let(:config) { instance_double(Guard::JekyllPlus::Config) }
+  let(:builder) { instance_double(Guard::JekyllPlus::Builder) }
 
   before do
     allow(Guard::Compat::UI).to receive(:info)
 
-    allow(Guard::Jekyllplus::Config).to receive(:new).and_return(config)
-    allow(Guard::Jekyllplus::Server).to receive(:new).and_return(server)
-    allow(Guard::Jekyllplus::Builder).to receive(:new).and_return(builder)
+    allow(Guard::JekyllPlus::Config).to receive(:new).and_return(config)
+    allow(Guard::JekyllPlus::Server).to receive(:new).and_return(server)
+    allow(Guard::JekyllPlus::Builder).to receive(:new).and_return(builder)
 
     allow(config).to receive(:info)
     allow(config).to receive(:source)
@@ -21,7 +21,7 @@ RSpec.describe Guard::Jekyllplus do
   describe '#initialize' do
     it 'sets up the configuration' do
       options = double('options')
-      expect(Guard::Jekyllplus::Config).to receive(:new).with(options)
+      expect(Guard::JekyllPlus::Config).to receive(:new).with(options)
       described_class.new(options)
     end
   end

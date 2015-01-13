@@ -1,4 +1,4 @@
-require 'guard/jekyll-plus/server'
+require 'guard/jekyll_plus/server'
 
 # stub for tests to avoid requiring
 unless Object.const_defined?(:Rack)
@@ -21,8 +21,8 @@ unless Object.const_defined?(:Rack)
   end
 end
 
-RSpec.describe Guard::Jekyllplus::Server do
-  let(:config) { instance_double(Guard::Jekyllplus::Config) }
+RSpec.describe Guard::JekyllPlus::Server do
+  let(:config) { instance_double(Guard::JekyllPlus::Config) }
   subject { described_class.new(config) }
 
   before do

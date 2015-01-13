@@ -6,12 +6,12 @@ require 'jekyll'
 
 require 'guard/compat/plugin'
 
-require 'guard/jekyll-plus/server'
-require 'guard/jekyll-plus/config'
-require 'guard/jekyll-plus/builder'
+require 'guard/jekyll_plus/server'
+require 'guard/jekyll_plus/config'
+require 'guard/jekyll_plus/builder'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     def initialize(options = {})
       super
 

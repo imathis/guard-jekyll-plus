@@ -23,7 +23,7 @@ Here's a look
 
 If using Bundler, add this line to your application's Gemfile:
 
-    gem 'guard-jekyll-plus'
+    gem 'guard-jekyll_plus'
 
 And then run:
 
@@ -31,18 +31,18 @@ And then run:
 
 Or install it manually with:
 
-    $ gem install guard-jekyll-plus
+    $ gem install guard-jekyll_plus
 
 ## Usage
 
 Navigate to your Jekyll project directory and create a Guardfile using:
 
-    $ guard init jekyll-plus
+    $ guard init jekyll_plus
 
 Or if you already have a Guardfile, add a Jekyll guard.
 
 ```ruby
-guard "jekyll-plus" do
+guard "jekyll_plus" do
   watch /.*/
   ignore /^_site/
 end
@@ -66,7 +66,7 @@ If your Jekyll project has a non-standard directory stucture like this:
 You would do this instead:
 
 ```ruby
-guard "jekyll-plus" do
+guard "jekyll_plus" do
   watch /^source/
   watch /_config.yml/
 end
@@ -97,7 +97,7 @@ This guard has these configurations.
 To use Jekyll's built-in server, simply set `:serve => true` in your rack options
 
 ```ruby
-guard "jekyll-plus", :serve => true do
+guard "jekyll_plus", :serve => true do
   watch /.*/
   ignore /^_site/
 end
@@ -115,7 +115,7 @@ If you wish to use your own rack server configuration, simply drop a `config.ru`
 Here's how you would add `txt` to the list of file extensions which triggers a Jekyll build.
 
 ```ruby
-guard "jekyll-plus", :extensions => ['txt'] do
+guard "jekyll_plus", :extensions => ['txt'] do
   watch /.*/
   ignore /^_site/
 end
@@ -129,7 +129,7 @@ which don't match these extensions will be simply copied over to the destination
 Here's how you might tell Jekyll to read from multiple configuration files.
 
 ```ruby
-guard "jekyll-plus", :config => ['settings.yml', 'override.yml'] do
+guard "jekyll_plus", :config => ['settings.yml', 'override.yml'] do
   watch /.*/
   ignore /^_site/
 end

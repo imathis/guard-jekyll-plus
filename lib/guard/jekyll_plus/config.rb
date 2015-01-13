@@ -1,7 +1,7 @@
 require 'jekyll'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Config
       EXTS = %w(md mkd mkdn markdown textile html haml slim xml yml sass scss)
 

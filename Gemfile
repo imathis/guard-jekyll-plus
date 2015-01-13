@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in guard-jekyll-plus.gemspec
+# Specify your gem's dependencies in guard-jekyll_plus.gemspec
 #
 # NOTE: it's more convenient to use gemspec for bare-minimum test deps
 # and the Gemfile for any extra dev gems

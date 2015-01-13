@@ -1,28 +1,28 @@
 require 'guard/compat/test/helper'
 
-require 'guard/jekyll-plus/builder'
+require 'guard/jekyll_plus/builder'
 
 module Guard
-  RSpec.describe Jekyllplus::Builder do
-    let(:config) { instance_double(Jekyllplus::Config) }
+  RSpec.describe JekyllPlus::Builder do
+    let(:config) { instance_double(JekyllPlus::Config) }
     let(:site) { instance_double(Jekyll::Site) }
-    let(:rebuilder) { instance_double(Jekyllplus::Builder::Rebuilder) }
-    let(:modifier) { instance_double(Jekyllplus::Builder::Modifier) }
-    let(:adder) { instance_double(Jekyllplus::Builder::Adder) }
-    let(:remover) { instance_double(Jekyllplus::Builder::Remover) }
+    let(:rebuilder) { instance_double(JekyllPlus::Builder::Rebuilder) }
+    let(:modifier) { instance_double(JekyllPlus::Builder::Modifier) }
+    let(:adder) { instance_double(JekyllPlus::Builder::Adder) }
+    let(:remover) { instance_double(JekyllPlus::Builder::Remover) }
 
     subject { described_class.new(config) }
 
     before do
       allow(Jekyll::Site).to receive(:new).and_return(site)
 
-      allow(Jekyllplus::Config).to receive(:new).and_return(config)
+      allow(JekyllPlus::Config).to receive(:new).and_return(config)
       allow(config).to receive(:jekyll_config)
 
-      allow(Jekyllplus::Builder::Adder).to receive(:new).and_return(adder)
-      allow(Jekyllplus::Builder::Remover).to receive(:new).and_return(remover)
-      allow(Jekyllplus::Builder::Modifier).to receive(:new).and_return(modifier)
-      allow(Jekyllplus::Builder::Rebuilder).to receive(:new)
+      allow(JekyllPlus::Builder::Adder).to receive(:new).and_return(adder)
+      allow(JekyllPlus::Builder::Remover).to receive(:new).and_return(remover)
+      allow(JekyllPlus::Builder::Modifier).to receive(:new).and_return(modifier)
+      allow(JekyllPlus::Builder::Rebuilder).to receive(:new)
         .and_return(rebuilder)
     end
 

@@ -1,14 +1,14 @@
 require 'jekyll'
 
-require 'guard/jekyll-plus/config'
+require 'guard/jekyll_plus/config'
 
-require 'guard/jekyll-plus/builder/modifier'
-require 'guard/jekyll-plus/builder/adder'
-require 'guard/jekyll-plus/builder/remover'
-require 'guard/jekyll-plus/builder/rebuilder'
+require 'guard/jekyll_plus/builder/modifier'
+require 'guard/jekyll_plus/builder/adder'
+require 'guard/jekyll_plus/builder/remover'
+require 'guard/jekyll_plus/builder/rebuilder'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Builder
       def initialize(config)
         @config = config

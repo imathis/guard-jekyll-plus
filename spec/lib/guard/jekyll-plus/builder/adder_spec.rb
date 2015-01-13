@@ -1,9 +1,9 @@
-require 'guard/jekyll-plus/builder/adder'
+require 'guard/jekyll_plus/builder/adder'
 
 module Guard
-  RSpec.describe Jekyllplus::Builder::Adder do
+  RSpec.describe JekyllPlus::Builder::Adder do
     let(:site) { instance_double(Jekyll::Site) }
-    let(:config) { instance_double(Jekyllplus::Config) }
+    let(:config) { instance_double(JekyllPlus::Config) }
     subject { described_class.new(config, site) }
 
     describe '#update' do

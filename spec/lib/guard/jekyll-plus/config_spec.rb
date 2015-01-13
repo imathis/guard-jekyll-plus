@@ -1,8 +1,8 @@
 require 'guard/compat/test/helper'
 
-require 'guard/jekyll-plus/config'
+require 'guard/jekyll_plus/config'
 
-RSpec.describe Guard::Jekyllplus::Config do
+RSpec.describe Guard::JekyllPlus::Config do
   let(:options) { {} }
   subject { described_class.new(options) }
 
