@@ -1,14 +1,14 @@
-require 'guard/jekyll-plus/builder/action'
+require 'guard/jekyll_plus/builder/action'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Builder
-      class Modifier < Action
+      class Adder < Action
         def initialize(*args)
-          @msg = 'Files changed: '
-          @mark = '  ~ '.yellow
-          @name = 'update'
-          @activity = 'updating'
+          @msg = 'Files added: '
+          @mark = '  + '.green
+          @name = 'copy'
+          @activity = 'copying'
           @color = :green
           super
         end

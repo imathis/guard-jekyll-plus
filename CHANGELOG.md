@@ -51,7 +51,7 @@
 
 ### 1.3.0
 
-- Changed guard name to jekyll-plus to help Guard properly init the Guardfile.
+- Changed guard name to jekyll_plus to help Guard properly init the Guardfile.
 
 ### 1.2.3
 

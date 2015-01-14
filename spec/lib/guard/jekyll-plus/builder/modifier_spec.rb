@@ -1,9 +1,9 @@
-require 'guard/jekyll-plus/builder/modifier'
+require 'guard/jekyll_plus/builder/modifier'
 
 module Guard
-  RSpec.describe Jekyllplus::Builder::Modifier do
+  RSpec.describe JekyllPlus::Builder::Modifier do
     let(:site) { instance_double(Jekyll::Site) }
-    let(:config) { instance_double(Jekyllplus::Config) }
+    let(:config) { instance_double(JekyllPlus::Config) }
     subject { described_class.new(config, site) }
 
     describe '#update' do

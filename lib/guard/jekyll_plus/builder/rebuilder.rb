@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-require 'guard/jekyll-plus/builder/action'
+require 'guard/jekyll_plus/builder/action'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Builder
       class Rebuilder < Action
         def initialize(*args)

@@ -2,10 +2,10 @@ require 'jekyll'
 
 require 'guard/compat/plugin'
 
-require 'guard/jekyll-plus/config'
+require 'guard/jekyll_plus/config'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Server
       def initialize(config)
         @thread = nil

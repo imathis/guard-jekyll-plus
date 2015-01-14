@@ -1,9 +1,9 @@
-require 'guard/jekyll-plus/builder/remover'
+require 'guard/jekyll_plus/builder/remover'
 
 module Guard
-  RSpec.describe Jekyllplus::Builder::Remover do
+  RSpec.describe JekyllPlus::Builder::Remover do
     let(:site) { instance_double(Jekyll::Site) }
-    let(:config) { instance_double(Jekyllplus::Config) }
+    let(:config) { instance_double(JekyllPlus::Config) }
     subject { described_class.new(config, site) }
 
     describe '#update' do

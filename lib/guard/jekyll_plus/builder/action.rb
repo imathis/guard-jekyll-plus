@@ -4,10 +4,10 @@ require 'benchmark'
 require 'jekyll'
 require 'guard/compat/plugin'
 
-require 'guard/jekyll-plus/config'
+require 'guard/jekyll_plus/config'
 
 module Guard
-  class Jekyllplus < Plugin
+  class JekyllPlus < Plugin
     class Builder
       class Action
         def initialize(config, site)
