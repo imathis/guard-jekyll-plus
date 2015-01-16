@@ -23,7 +23,7 @@ Here's a look
 
 If using Bundler, add this line to your application's Gemfile:
 
-    gem 'guard-jekyll_plus'
+    gem 'guard-jekyll-plus'
 
 And then run:
 
@@ -31,13 +31,13 @@ And then run:
 
 Or install it manually with:
 
-    $ gem install guard-jekyll_plus
+    $ gem install guard-jekyll-plus
 
 ## Usage
 
 Navigate to your Jekyll project directory and create a Guardfile using:
 
-    $ guard init jekyll_plus
+    $ guard init jekyll-plus
 
 Or if you already have a Guardfile, add a Jekyll guard.
 
