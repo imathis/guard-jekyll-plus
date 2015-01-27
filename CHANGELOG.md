@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.0.1 - 12-15-2014
+
+- Changed guard template name for better compatibility with Guard's naming scheme.
+
 ### 2.0.0 - 12-15-2014
 
 - Updated to work with Guard 2.x
