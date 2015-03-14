@@ -1,4 +1,7 @@
++# TODO: this should be internally ignored by JekyllPlus
++# (and match the Jekyll output directory!)
+ignore(/^_site/)
+
 guard 'jekyll_plus' do
   watch(/.*/)
-  ignore(/^_site/)
 end
