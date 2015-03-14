@@ -50,5 +50,9 @@ module Guard
     def run_on_removals(paths)
       @builder.removed(paths)
     end
+
+    def self.template(plugin_location)
+      (Pathname(plugin_location) + "lib/guard/jekyll_plus/templates/Guardfile").read
+    end
   end
 end
