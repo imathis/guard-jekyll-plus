@@ -2,6 +2,6 @@
 +# (and match the Jekyll output directory!)
 ignore(/^_site/)
 
-guard 'jekyll_plus' do
+guard 'jekyll-plus' do
   watch(/.*/)
 end
