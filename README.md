@@ -42,9 +42,10 @@ Navigate to your Jekyll project directory and create a Guardfile using:
 Or if you already have a Guardfile, add a Jekyll guard.
 
 ```ruby
-guard "jekyll_plus" do
+ignore /^_site/ # NOTE: this can interfere with Guard::LiveReload
+
+guard "jekyll-plus" do
   watch /.*/
-  ignore /^_site/
 end
 ```
 
@@ -66,7 +67,7 @@ If your Jekyll project has a non-standard directory stucture like this:
 You would do this instead:
 
 ```ruby
-guard "jekyll_plus" do
+guard "jekyll-plus" do
   watch /^source/
   watch /_config.yml/
 end
@@ -97,9 +98,10 @@ This guard has these configurations.
 To use Jekyll's built-in server, simply set `:serve => true` in your rack options
 
 ```ruby
-guard "jekyll_plus", :serve => true do
+ignore /^_site/ # NOTE: this can interfere with Guard::LiveReload
+
+guard "jekyll-plus", :serve => true do
   watch /.*/
-  ignore /^_site/
 end
 ```
 
@@ -115,9 +117,10 @@ If you wish to use your own rack server configuration, simply drop a `config.ru`
 Here's how you would add `txt` to the list of file extensions which triggers a Jekyll build.
 
 ```ruby
-guard "jekyll_plus", :extensions => ['txt'] do
+ignore /^_site/ # NOTE: this can interfere with Guard::LiveReload
+
+guard "jekyll-plus", :extensions => ['txt'] do
   watch /.*/
-  ignore /^_site/
 end
 ```
 
@@ -129,9 +132,10 @@ which don't match these extensions will be simply copied over to the destination
 Here's how you might tell Jekyll to read from multiple configuration files.
 
 ```ruby
-guard "jekyll_plus", :config => ['settings.yml', 'override.yml'] do
+ignore /^_site/ # NOTE: this can interfere with Guard::LiveReload
+
+guard "jekyll-plus", :config => ['settings.yml', 'override.yml'] do
   watch /.*/
-  ignore /^_site/
 end
 ```
 
