@@ -1,5 +1,5 @@
-+# TODO: this should be internally ignored by JekyllPlus
-+# (and match the Jekyll output directory!)
+# TODO: this should be internally ignored by JekyllPlus
+# (and match the Jekyll output directory!)
 ignore(/^_site/)
 
 guard 'jekyll-plus' do
