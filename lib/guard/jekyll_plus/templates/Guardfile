@@ -1,7 +1,5 @@
-# TODO: this should be internally ignored by JekyllPlus
-# (and match the Jekyll output directory!)
-ignore(/^_site/)
-
-guard 'jekyll-plus' do
-  watch(/.*/)
+require 'guard/jekyll_plus/config'
+jekyll_plus_options = {}
+guard 'jekyll-plus', jekyll_plus_options do
+  watch(Guard::JekyllPlus::Config.new(jekyll_plus_options).watch_regexp)
 end
