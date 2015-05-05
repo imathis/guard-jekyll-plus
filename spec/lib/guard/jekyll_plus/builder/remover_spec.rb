@@ -23,6 +23,7 @@ module Guard
       context 'when asset files are deleted' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:source).and_return('.')
 
           # non existing src file
           allow(File).to receive(:exist?).with('foo.jpg').and_return(false)
@@ -59,6 +60,8 @@ module Guard
       context 'when an error happens' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:source).and_return('.')
+
           allow(config).to receive(:error)
           allow(File).to receive(:exist?).with('foo').and_return(false)
 

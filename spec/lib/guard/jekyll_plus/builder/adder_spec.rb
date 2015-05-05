@@ -31,6 +31,7 @@ module Guard
       context 'when assets change' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:source).and_return('.')
           allow(config).to receive(:excluded?).with('foo.jpg').and_return(false)
         end
 
@@ -70,6 +71,7 @@ module Guard
       context 'when an error happens' do
         before do
           allow(config).to receive(:destination).and_return('bar/')
+          allow(config).to receive(:source).and_return('.')
           allow(FileUtils).to receive(:cp).and_raise(Errno::ENOENT, 'foo')
           allow(config).to receive(:error)
           allow(config).to receive(:excluded?).with('foo').and_return(false)
