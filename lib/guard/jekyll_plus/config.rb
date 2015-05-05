@@ -123,7 +123,7 @@ module Guard
         if path == ''
           './'
         else
-          path.sub(/^\//, '')
+          path.sub(%r{^/}, '')
         end
       end
     end

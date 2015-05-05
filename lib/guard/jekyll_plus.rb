@@ -52,7 +52,8 @@ module Guard
     end
 
     def self.template(plugin_location)
-      (Pathname(plugin_location) + "lib/guard/jekyll_plus/templates/Guardfile").read
+      path = 'lib/guard/jekyll_plus/templates/Guardfile'
+      (Pathname(plugin_location) + path).read
     end
   end
 end
