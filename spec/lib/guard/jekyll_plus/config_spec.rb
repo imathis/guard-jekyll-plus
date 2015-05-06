@@ -135,4 +135,26 @@ RSpec.describe Guard::JekyllPlus::Config do
       end
     end
   end
+
+  describe '#watch_regexp' do
+    context 'with a destination' do
+      let(:jekyll_config) do
+        valid_jekyll_options.merge('destination' => 'public')
+      end
+
+      it 'matches files outside destination' do
+        expect(subject.watch_regexp).to match('foo')
+        expect(subject.watch_regexp).to match('foo/bar')
+        expect(subject.watch_regexp).to match('foo/public/bar')
+        expect(subject.watch_regexp).to match('foo/public')
+        expect(subject.watch_regexp).to match('publics/bar')
+      end
+
+      it 'does not match files in destination' do
+        expect(subject.watch_regexp).to_not match('public/foo')
+        expect(subject.watch_regexp).to_not match('public/foo/bar')
+        expect(subject.watch_regexp).to_not match('public/foo/public')
+      end
+    end
+  end
 end

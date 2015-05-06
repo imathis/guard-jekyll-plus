@@ -91,6 +91,10 @@ module Guard
         @jekyll_config['exclude'].any? { |glob| File.fnmatch?(glob, path) }
       end
 
+      def watch_regexp
+        %r{^(?!#{destination}\/).*}
+      end
+
       private
 
       def silent?
@@ -123,7 +127,7 @@ module Guard
         if path == ''
           './'
         else
-          path.sub(/^\//, '')
+          path.sub(%r{^/}, '')
         end
       end
     end

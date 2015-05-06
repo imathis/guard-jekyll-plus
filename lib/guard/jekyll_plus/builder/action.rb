@@ -58,11 +58,16 @@ module Guard
         end
 
         def destination_path(file)
-          if @config.source =~ /^\./
-            File.join @config.destination, file
-          else
-            file.sub(/^#{@config.source}/, "#{@config.destination}")
-          end
+          src_abs_path = Pathname(@config.source).expand_path
+
+          abs_path = Pathname(file).expand_path
+          rel_path = begin
+                       abs_path.relative_path_from(src_abs_path)
+                     rescue ArgumentError # probably happens only on Windows
+                       raise "File not in Jekyll source dir: #{file}"
+                     end
+
+          (Pathname(@config.destination) + rel_path).to_s
         end
 
         def build_was_needed(paths)
