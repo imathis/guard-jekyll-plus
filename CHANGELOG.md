@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.0.1 - 05-06-2015
+- Fix: Guard init failure.
+- Fix: Mishandling of paths triggered a SameFile argument error.
+
 ### 2.0.1 - 12-15-2014
 
 - Changed guard template name for better compatibility with Guard's naming scheme.
