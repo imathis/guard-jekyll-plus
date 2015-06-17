@@ -2,7 +2,7 @@
 
 A Guard plugin for smarter Jekyll watching.
 
-[![Gem Version](https://badge.fury.io/rb/guard-jekyll-plus.png)](http://badge.fury.io/rb/guard-jekyll-plus)
+[![Gem Version](https://badge.fury.io/rb/guard-jekyll-plus.svg)](http://badge.fury.io/rb/guard-jekyll-plus)
 
 Features:
 
